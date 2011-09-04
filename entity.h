@@ -14,6 +14,7 @@ class Entity{
 	Entity(Model*);
 	void setPos(float,float,float);
 	void move(float,float,float);
+	void thrusters(float);
 	void rotateYaw(float);
 	void rotatePitch(float);
 	void rotateRoll(float);

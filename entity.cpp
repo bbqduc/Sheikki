@@ -43,6 +43,13 @@ void Entity::move(float x, float y, float z)
 	printMatrix(position);
 }
 
+void Entity::thrusters(float force)
+{
+	position[3] += (orientation[2] * force);
+	position[7] += (orientation[6] * force);
+	position[11] += (orientation[10] * force);
+}
+
 GLuint Entity::GetTexture() const
 {
 	return model->GetTexture();

@@ -107,9 +107,11 @@ void Engine::applyInput(Entity* entity)
 	if(keysDown[RIGHT])
 		entity->rotateYaw(0.01f);
 	if(keysDown[A])
-		entity->move(0,0,-0.1f);
+		entity->thrusters(0.1f);
+//		entity->move(0,0,-0.1f);
 	if(keysDown[Z])
-		entity->move(0,0,0.1f);
+		entity->thrusters(-0.1f);
+//		entity->move(0,0,0.1f);
 }
 
 Entity& Engine::addEntity(Entity& entity)
