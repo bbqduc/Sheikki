@@ -17,7 +17,7 @@ class Engine
 
 	void processEvents();
 	void handleKeyPress(sf::Event&);
-	void applyInput(Entity*);
+	void applyInput(Entity*, sf::Uint32 delta);
 
 	public:
 	Engine(int width = 800, int height = 600, int depth = 32);
