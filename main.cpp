@@ -44,7 +44,7 @@ Model createSimpleTriangleModel()
 	vertices[2].coords[2] = 0.5f;
 
 	//Model model(3, vertices, colors);
-	Model model(3, vertices, texcoords, GL_TRIANGLES, "testi.png");
+	Model model(3, vertices, texcoords, GL_TRIANGLES, "TEXTURE_TEST.png");
 	delete[] vertices;
 	delete[] colors;
 

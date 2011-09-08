@@ -13,14 +13,13 @@ Engine::Engine(int width, int height, int depth)
 
 void Engine::gameLoop()
 {
+	window.SetActive();
 	while(window.IsOpened()){
-
-		window.SetActive();
 		graphics.draw(objects);
 		window.Display();
 
 		processEvents();
-		applyInput(activeEntity);
+		applyInput(activeEntity, window.GetFrameTime());
 		sf::Sleep(0.001);
 	}
 }
@@ -88,26 +87,26 @@ void Engine::handleKeyPress(sf::Event& event)
 	}
 }
 
-void Engine::applyInput(Entity* entity)
+void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 {
 	if(entity == NULL)
 		return;
 	if(keysDown[UP])
-		entity->rotatePitch(0.01f);
+		entity->rotatePitch(0.005f*delta);
 	if(keysDown[DOWN])
-		entity->rotatePitch(-0.01f);
+		entity->rotatePitch(-0.005f*delta);
 	if(keysDown[Q])
-		entity->rotateRoll(-0.01f);
+		entity->rotateRoll(-0.005f*delta);
 	if(keysDown[E])
-		entity->rotateRoll(0.01f);
+		entity->rotateRoll(0.005f*delta);
 	if(keysDown[LEFT])
-		entity->rotateYaw(-0.01f);
+		entity->rotateYaw(-0.005f*delta);
 	if(keysDown[RIGHT])
-		entity->rotateYaw(0.01f);
+		entity->rotateYaw(0.005f*delta);
 	if(keysDown[A])
-		entity->thrusters(0.1f);
+		entity->thrusters(0.05f*delta);
 	if(keysDown[Z])
-		entity->thrusters(-0.1f);
+		entity->thrusters(-0.05f*delta);
 }
 
 Entity& Engine::addEntity(Entity& entity)
