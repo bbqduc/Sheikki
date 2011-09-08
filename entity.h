@@ -9,6 +9,8 @@ class Entity{
 	Model* model;
 	MyMatrix position,
 		 orientation; // Save position and orientation as matrices for efficiency
+	float velocity;
+	Vec3 movement_direction;
 
 	public:
 	Entity(Model*);
@@ -18,6 +20,7 @@ class Entity{
 	void rotateYaw(float);
 	void rotatePitch(float);
 	void rotateRoll(float);
+	void tick();
 	GLuint GetTexture() const;
 };	
 #endif

@@ -32,16 +32,16 @@ Model createSimpleTriangleModel()
 	texcoords[2].coords[2] = 0;
 
 	vertices[0].coords[0] = -0.5f;
-	vertices[0].coords[1] = -0.5f;
-	vertices[0].coords[2] = 0;
+	vertices[0].coords[1] = 0;
+	vertices[0].coords[2] = -0.5f;
 
 	vertices[1].coords[0] = 0.5f;
-	vertices[1].coords[1] = -0.5f;
-	vertices[1].coords[2] = 0;
+	vertices[1].coords[1] = 0;
+	vertices[1].coords[2] = -0.5f;
 
-	vertices[2].coords[0] = -0.5f;
-	vertices[2].coords[1] = 0.5f;
-	vertices[2].coords[2] = 0;
+	vertices[2].coords[0] = 0;
+	vertices[2].coords[1] = 0;
+	vertices[2].coords[2] = 0.5f;
 
 	//Model model(3, vertices, colors);
 	Model model(3, vertices, texcoords, GL_TRIANGLES, "testi.png");

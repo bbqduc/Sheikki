@@ -47,7 +47,6 @@ void Engine::handleKeyPress(sf::Event& event)
 {
 	if(event.Type == sf::Event::KeyPressed)
 	{
-		std::cerr << "YOU SEEM TO HAVE PRESSED A KEY!!\n";
 		if(event.Key.Code == sf::Keyboard::Escape)
 			window.Close();
 		if(event.Key.Code == sf::Keyboard::Up)
@@ -70,7 +69,6 @@ void Engine::handleKeyPress(sf::Event& event)
 
 	if(event.Type == sf::Event::KeyReleased)
 	{
-		std::cerr << "YOU SEEM TO HAVE RELEASED A KEY!!\n";
 		if(event.Key.Code == sf::Keyboard::Up)
 			keysDown[UP] = false;
 		if(event.Key.Code == sf::Keyboard::Down)
@@ -108,10 +106,8 @@ void Engine::applyInput(Entity* entity)
 		entity->rotateYaw(0.01f);
 	if(keysDown[A])
 		entity->thrusters(0.1f);
-//		entity->move(0,0,-0.1f);
 	if(keysDown[Z])
 		entity->thrusters(-0.1f);
-//		entity->move(0,0,0.1f);
 }
 
 Entity& Engine::addEntity(Entity& entity)
