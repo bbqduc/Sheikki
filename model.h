@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <GL/glew.h>
-#include "vec3.h"
+#include "vec.h"
 
 class Model
 {
@@ -11,7 +11,7 @@ class Model
 
 	friend class Graphics;
 	int numVertices;
-	Vec3 *vertices, *colors, *texcoords;
+	Vec<3> *vertices, *colors, *texcoords;
 	GLint drawMode;
 	GLuint texture;
 	sf::FloatRect texturecoords;
@@ -19,8 +19,8 @@ class Model
 	void InitVBOs();
 
 	public:
-	Model(int numVertices, Vec3 *vertices, Vec3 *colors = NULL, GLint drawMode = GL_TRIANGLES);
-	Model(int numVertices, Vec3 *vertices, Vec3 *colors, GLint drawMode, std::string texturepath);
+	Model(int numVertices, Vec<3> *vertices, Vec<3> *colors = NULL, GLint drawMode = GL_TRIANGLES);
+	Model(int numVertices, Vec<3> *vertices, Vec<3> *colors, GLint drawMode, std::string texturepath);
 	~Model();
 	GLuint GetTexture() const;
 };

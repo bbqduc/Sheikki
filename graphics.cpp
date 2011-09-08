@@ -193,21 +193,21 @@ void Graphics::draw(const Entity& entity)
 	// Set in_Position in shader to entitymodels location
 	glBindBuffer(GL_ARRAY_BUFFER, entity.model->VBOid);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec3), BUFFER_OFFSET(0));
+	glVertexAttribPointer(0, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
 
 	// Set in_Color in shader to entitymodels color
 	if(entity.model->colors != NULL)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, entity.model->colorid);
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec3), BUFFER_OFFSET(0));
+		glVertexAttribPointer(1, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
 	}
 
 	if (entity.model->texcoords != NULL)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, entity.model->texcoordid);
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec3), BUFFER_OFFSET(0));
+		glVertexAttribPointer(2, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
 	}
 	// Drawing happens here
 	glDrawArrays(entity.model->drawMode, 0, entity.model->numVertices);

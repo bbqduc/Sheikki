@@ -1,14 +1,14 @@
 #include "engine.h"
-#include "vec3.h"
+#include "vec.h"
 #include "model.h"
 #include "entity.h"
 
 Model createSimpleTriangleModel()
 {
 
-	Vec3* vertices = new Vec3[3];
-	Vec3* colors = new Vec3[3];
-	Vec3* texcoords = new Vec3[3];
+	Vec<3>* vertices = new Vec<3>[3];
+	Vec<3>* colors = new Vec<3>[3];
+	Vec<3>* texcoords = new Vec<3>[3];
 
 	colors[0].coords[0] = 0.5f;
 	colors[0].coords[1] = 0.5f;
@@ -43,7 +43,6 @@ Model createSimpleTriangleModel()
 	vertices[2].coords[1] = 0;
 	vertices[2].coords[2] = 0.5f;
 
-	//Model model(3, vertices, colors);
 	Model model(3, vertices, texcoords, GL_TRIANGLES, "TEXTURE_TEST.png");
 	delete[] vertices;
 	delete[] colors;

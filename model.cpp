@@ -1,10 +1,10 @@
 #include "model.h"
 #include <iostream>
 
-Model::Model(int numVertices_, Vec3* vertices_, Vec3* colors_, GLint drawMode_) :
+Model::Model(int numVertices_, Vec<3>* vertices_, Vec<3>* colors_, GLint drawMode_) :
 	numVertices(numVertices_),
-	vertices(new Vec3[numVertices_]),
-	colors(new Vec3[numVertices_]),
+	vertices(new Vec<3>[numVertices_]),
+	colors(new Vec<3>[numVertices_]),
 	texcoords(NULL),
 	drawMode(drawMode_),
 	texture(0)
@@ -18,11 +18,11 @@ Model::Model(int numVertices_, Vec3* vertices_, Vec3* colors_, GLint drawMode_) 
 	InitVBOs();
 }
 
-Model::Model(int numVertices_, Vec3* vertices_, Vec3* texcoords_, GLint drawMode_, std::string texturepath) :
+Model::Model(int numVertices_, Vec<3>* vertices_, Vec<3>* texcoords_, GLint drawMode_, std::string texturepath) :
 	numVertices(numVertices_),
-	vertices(new Vec3[numVertices_]),
+	vertices(new Vec<3>[numVertices_]),
 	colors(NULL),
-	texcoords(new Vec3[numVertices_]),
+	texcoords(new Vec<3>[numVertices_]),
 	drawMode(drawMode_),
 	texture(0)
 {
@@ -59,21 +59,21 @@ void Model::InitVBOs()
 	// initialize VBO for model vertices
 	glGenBuffers(1, &VBOid);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOid);
-	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec3), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), &vertices[0], GL_STATIC_DRAW);
 
 	// initialize VBO for colors of vertices
 	if(colors != NULL)
 	{
 		glGenBuffers(1, &colorid);
 		glBindBuffer(GL_ARRAY_BUFFER, colorid);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec3), colors[0].coords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), colors[0].coords, GL_STATIC_DRAW);
 	}
 
 	if (texcoords != NULL)
 	{
 		glGenBuffers(1, &texcoordid);
 		glBindBuffer(GL_ARRAY_BUFFER, texcoordid);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec3), &texcoords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), &texcoords[0], GL_STATIC_DRAW);
 	}
 }
 

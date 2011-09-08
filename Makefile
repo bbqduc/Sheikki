@@ -1,4 +1,4 @@
-CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra
+CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -std=c++0x
 SFML = -lsfml-window -lsfml-system -lsfml-graphics
 CPPS = main.cpp mymatrix.cpp entity.cpp model.cpp graphics.cpp engine.cpp
 OBJS = main.o mymatrix.o entity.o model.o graphics.o engine.o

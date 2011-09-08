@@ -5,9 +5,11 @@ Entity::Entity(Model* model_)
 	: model(model_),
 	position(),
 	orientation(),
-	velocity(0),
-	movement_direction(0,0,1)
+	velocity(0)
 {
+	movement_direction[0] = 0;
+	movement_direction[1] = 0;
+	movement_direction[2] = 1;
 }
 
 void Entity::setPos(float x, float y, float z)
@@ -50,7 +52,7 @@ void Entity::thrusters(float force)
 	position[11] += (orientation[10] * force);
 }
 
-void tick()
+void Entity::tick()
 {
 	position[3] += (movement_direction[0] * velocity); // x
 	position[7] += (movement_direction[1] * velocity); // y

@@ -3,6 +3,7 @@
 
 #include "model.h"
 #include "mymatrix.h"
+#include "vec.h"
 
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
@@ -10,7 +11,7 @@ class Entity{
 	MyMatrix position,
 		 orientation; // Save position and orientation as matrices for efficiency
 	float velocity;
-	Vec3 movement_direction;
+	Vec<3> movement_direction;
 
 	public:
 	Entity(Model*);
