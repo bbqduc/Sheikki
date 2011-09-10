@@ -196,6 +196,7 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 		std::cout << ")\n";
 	}
 */
+
 	std::cout << "Texture coordinates ... ";
 	if(model.texcoords)
 	{

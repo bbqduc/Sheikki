@@ -24,6 +24,7 @@ class Graphics
 
 	void initFonts();
 	void initGlew();
+	void initGL();
 	void initShaders();
 	char* loadFile(char*, GLint&); // This is for loading a shader for a file
 	void printShaderInfoLog(GLint); // Prints information in case something goes wrong

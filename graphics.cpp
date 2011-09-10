@@ -7,23 +7,24 @@
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
-Graphics::Graphics()
-	:perspective(projectionMatrix(45.0f, 800.0f/600.0f, 1, 10))
+	Graphics::Graphics()
+:perspective(projectionMatrix(45.0f, 800.0f/600.0f, 1, 10))
 {
 	perspective = perspective * translationMatrix(0,0,-8);
 
 	initGlew();
+	initGL();
 	initShaders();
-//	initFonts();
+	//	initFonts();
 }
 
 void Graphics::initFonts()
 {
-/*	if(FT_Init_FreeType(&fontLibrary))
+	/*	if(FT_Init_FreeType(&fontLibrary))
 		std::cerr << "Font library init failed!\n";
-	if(FT_New_Face(&fontLibrary, "FreeMono.ttf", 0, &fontInfo))
+		if(FT_New_Face(&fontLibrary, "FreeMono.ttf", 0, &fontInfo))
 		std::cerr << "Could not load font!\n";
-	FT_Set_Char_Size(fontinfo, 8, 8, 0, 0);*/
+		FT_Set_Char_Size(fontinfo, 8, 8, 0, 0);*/
 }
 
 void Graphics::initGlew()
@@ -35,6 +36,14 @@ void Graphics::initGlew()
 		std::cerr << "Glew version : " << glewGetString(GLEW_VERSION)
 			<< "\nOpengl version : " << glGetString(GL_VERSION) 
 			<< "\nShading language version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+}
+
+void Graphics::initGL()
+{
+	glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+	glClearDepth(1.0f);
+	glDepthFunc(GL_LEQUAL);
+//	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
 }
 
 void checkGLErrors(std::string functionName){
@@ -169,7 +178,7 @@ void Graphics::initShaders(){
 
 void Graphics::draw(const std::list<Entity>& objects)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for(std::list<Entity>::const_iterator i = objects.begin(); i != objects.end(); ++i)
 		draw(*i);
 }
