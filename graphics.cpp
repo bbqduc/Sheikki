@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "sheikki_wrappers.h"
 #include <GL/glew.h>
 #include <iostream>
 #include <fstream>
@@ -175,7 +176,7 @@ void Graphics::draw(const std::list<Entity>& objects)
 
 void Graphics::draw(const Entity& entity)
 {
-	glBindVertexArray(entity.model->VAO_id);
+	sheikki_glBindVertexArray(entity.model->VAO_id);
 	glUseProgram(shader);
 
 	MyMatrix modelViewMatrix = perspective * entity.position * entity.orientation;

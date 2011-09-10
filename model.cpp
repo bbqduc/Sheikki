@@ -1,4 +1,5 @@
 #include "model.h"
+#include "sheikki_wrappers.h"
 #include <iostream>
 
 // Private constructor used by Model_3ds_loader
@@ -76,8 +77,8 @@ Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec
 void Model::InitVBOs()
 {
 	// initialize VAO
-	glGenVertexArrays(1, &VAO_id);
-	glBindVertexArray(VAO_id);
+	sheikki_glGenVertexArrays(1, &VAO_id);
+	sheikki_glBindVertexArray(VAO_id);
 
 	// initialize VBO for model vertices and polygon vertex indices
 	glGenBuffers(1, &VBO_vertices_id);
@@ -110,7 +111,7 @@ void Model::InitVBOs()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_polygons*sizeof(Vec<GLuint, 3>), &polygons[0][0], GL_STATIC_DRAW);
 
-	glBindVertexArray(0);
+	sheikki_glBindVertexArray(0);
 }
 
 GLuint Model::GetTexture() const
