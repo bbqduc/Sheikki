@@ -12,6 +12,7 @@ class MyMatrix
 	const float& operator[](int) const;
 	MyMatrix& operator+=(const MyMatrix&);
 	MyMatrix& operator-=(const MyMatrix&);
+	MyMatrix& operator*=(const MyMatrix&);
 };
 
 MyMatrix operator-(const MyMatrix&, const MyMatrix&);

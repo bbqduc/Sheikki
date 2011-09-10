@@ -39,7 +39,6 @@ void Entity::rotateRoll(float roll)
 
 void Entity::move(float x, float y, float z)
 {
-//	std::cerr << "HERP DERP ENTITY IS MOVING!\n";
 	position[3] += x;
 	position[7] += y;
 	position[11] += z;
@@ -50,6 +49,8 @@ void Entity::thrusters(float force)
 	position[3] += (orientation[2] * force);
 	position[7] += (orientation[6] * force);
 	position[11] += (orientation[10] * force);
+
+//	std::cerr << "Moving in direction " << orientation[2] << ' ' << orientation[6] << ' ' << orientation[10] << '\n';
 }
 
 void Entity::tick()

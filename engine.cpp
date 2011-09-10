@@ -20,7 +20,7 @@ void Engine::gameLoop()
 
 		processEvents();
 		applyInput(activeEntity, window.GetFrameTime());
-		sf::Sleep(0.001);
+		sf::Sleep(0.01);
 	}
 }
 

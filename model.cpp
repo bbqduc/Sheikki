@@ -1,36 +1,55 @@
 #include "model.h"
 #include <iostream>
 
-Model::Model(int numVertices_, Vec<3>* vertices_, Vec<3>* colors_, GLint drawMode_) :
-	numVertices(numVertices_),
-	vertices(new Vec<3>[numVertices_]),
-	colors(new Vec<3>[numVertices_]),
+// Private constructor used by Model_3ds_loader
+Model::Model():
+	num_vertices(0),
+	num_polygons(0),
+	vertices(NULL),
+	colors(NULL),
 	texcoords(NULL),
+	polygons(NULL)
+{}
+
+Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<uint16_t, 3>* polygons_, Vec<float, 3>* colors_, GLint drawMode_) :
+	num_vertices(num_vertices_),
+	num_polygons(num_polygons_),
+	vertices(new Vec<float, 3>[num_vertices_]),
+	colors(new Vec<float, 3>[num_vertices_]),
+	texcoords(NULL),
+	polygons(new Vec<uint16_t, 3>[num_polygons]),
 	drawMode(drawMode_),
 	texture(0)
 {
-	for(int i = 0; i < numVertices; ++i)
+	for(int i = 0; i < num_vertices; ++i)
 	{
 		vertices[i] = vertices_[i];
 		if(colors != NULL)
 			colors[i] = colors_[i];
 	}
+	for(int i = 0; i < num_polygons; ++i)
+		polygons[i] = polygons_[i];
 	InitVBOs();
 }
 
-Model::Model(int numVertices_, Vec<3>* vertices_, Vec<3>* texcoords_, GLint drawMode_, std::string texturepath) :
-	numVertices(numVertices_),
-	vertices(new Vec<3>[numVertices_]),
+Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<uint16_t, 3>* polygons_, Vec<float, 2>* texcoords_, GLint drawMode_, std::string texturepath) :
+	num_vertices(num_vertices_),
+	num_polygons(num_polygons_),
+	vertices(new Vec<float, 3>[num_vertices_]),
 	colors(NULL),
-	texcoords(new Vec<3>[numVertices_]),
+	texcoords(new Vec<float, 2>[num_vertices_]),
+	polygons(new Vec<uint16_t, 3>[num_polygons_]),
 	drawMode(drawMode_),
 	texture(0)
 {
-	for(int i = 0; i < numVertices; ++i)
+	for(int i = 0; i < num_vertices; ++i)
 	{
 		vertices[i] = vertices_[i];
 		texcoords[i] = texcoords_[i];
 	}
+
+	for(int i = 0; i < num_polygons; ++i)
+		polygons[i] = polygons_[i];
 
 	InitVBOs();
 
@@ -56,25 +75,42 @@ Model::Model(int numVertices_, Vec<3>* vertices_, Vec<3>* texcoords_, GLint draw
 
 void Model::InitVBOs()
 {
-	// initialize VBO for model vertices
-	glGenBuffers(1, &VBOid);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOid);
-	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), &vertices[0], GL_STATIC_DRAW);
+	// initialize VAO
+	glGenVertexArrays(1, &VAO_id);
+	glBindVertexArray(VAO_id);
+
+	// initialize VBO for model vertices and polygon vertex indices
+	glGenBuffers(1, &VBO_vertices_id);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices_id);
+	glBufferData(GL_ARRAY_BUFFER, num_vertices*sizeof(Vec<float, 3>), &vertices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 3>), 0);
 
 	// initialize VBO for colors of vertices
 	if(colors != NULL)
 	{
-		glGenBuffers(1, &colorid);
-		glBindBuffer(GL_ARRAY_BUFFER, colorid);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), colors[0].coords, GL_STATIC_DRAW);
+		glGenBuffers(1, &VBO_color_id);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_color_id);
+		glBufferData(GL_ARRAY_BUFFER, num_vertices*sizeof(Vec<float, 3>), colors[0].coords, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 3>), 0);
 	}
 
 	if (texcoords != NULL)
 	{
-		glGenBuffers(1, &texcoordid);
-		glBindBuffer(GL_ARRAY_BUFFER, texcoordid);
-		glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(Vec<3>), &texcoords[0], GL_STATIC_DRAW);
+		glGenBuffers(1, &VBO_texcoord_id);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_texcoord_id);
+		glBufferData(GL_ARRAY_BUFFER, num_vertices*sizeof(Vec<float, 2>), &texcoords[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 2>), 0);
 	}
+
+	glGenBuffers(1, &VBO_indices_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_polygons*sizeof(Vec<uint16_t, 3>), &polygons[0][0], GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
 }
 
 GLuint Model::GetTexture() const

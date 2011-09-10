@@ -96,6 +96,14 @@ MyMatrix operator*(const MyMatrix& b, const MyMatrix& a)
 	return m;
 }
 
+MyMatrix& MyMatrix::operator*=(const MyMatrix& mat) 
+{
+	MyMatrix m(*this);
+	*this = m * mat;
+
+	return *this;
+}
+
 MyMatrix projectionMatrix(float fov, float aspect, float znear, float zfar)
 {
 	MyMatrix m(0.0f);

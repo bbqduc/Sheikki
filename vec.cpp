@@ -1,50 +1,50 @@
 #include <cmath>
 #include <cassert>
 
-template<size_t T>
-void Vec<T>::set_length(float target)
+template<typename T, size_t N>
+void Vec<T,N>::set_length(T target)
 {
-	float length = 0;
-	for(int i = 0; i < T; ++i)
+	T length = 0;
+	for(int i = 0; i < N; ++i)
 		length += (coords[i] * coords[i]);
 	
 	length = sqrt(length) / target;
 
-	for(int i = 0; i < T; ++i)
+	for(int i = 0; i < N; ++i)
 		coords[i] /= length;
 }
 
-template<size_t T>
-Vec<T> operator*(float a, const Vec<T>& vec)
+template<typename T, size_t N>
+Vec<T,N> operator*(T a, const Vec<T,N>& vec)
 {
-	Vec<T> temp(vec);	
+	Vec<T,N> temp(vec);	
 	temp *= a;
 
 	return temp;
 }
 
-template<size_t T>
-Vec<T>& Vec<T>::operator*=(float a)
+template<typename T, size_t N>
+Vec<T,N>& Vec<T,N>::operator*=(T a)
 {
-	for(int i = 0; i < T; ++i)
+	for(int i = 0; i < N; ++i)
 		coords[i] *= a;
 
 	return *this;
 }
 
-template<size_t T>
-float dot(const Vec<T>& vec1, const Vec<T>& vec2)
+template<typename T, size_t N>
+T dot(const Vec<T,N>& vec1, const Vec<T,N>& vec2)
 {
-	float ret = 0;
-	for(int i = 0; i < T; ++i)
+	T ret = 0;
+	for(int i = 0; i < N; ++i)
 		ret += (vec1.coords[i] * vec2.coords[i]);
 
 	return ret;
 }
 
-template<size_t T>
-float& Vec<T>::operator[](size_t index)
+template<typename T, size_t N>
+T& Vec<T,N>::operator[](size_t index)
 {
-	assert(index < T);
+	assert(index < N);
 	return coords[index];
 }

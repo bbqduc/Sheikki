@@ -1,20 +1,20 @@
 #ifndef VEC_H
 #define VEC_H
 
-template<size_t T>
+template<typename T, size_t N>
 struct Vec
 {
-	float coords[T];
+	T coords[N];
 
-	void set_length(float);
-	Vec& operator*=(float a);
-	float& operator[](size_t);
+	void set_length(T);
+	Vec& operator*=(T a);
+	T& operator[](size_t);
 };
 
-template<size_t T>
-Vec<T> operator*(float a, const Vec<T>& vec);
-template<size_t T>
-float dot(const Vec<T>&, const Vec<T>&);
+template<typename T, size_t N>
+Vec<T,N> operator*(T a, const Vec<T,N>& vec);
+template<typename T, size_t N>
+T dot(const Vec<T,N>&, const Vec<T,N>&);
 
 #include "vec.cpp"
 #endif

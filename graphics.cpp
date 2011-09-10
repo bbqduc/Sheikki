@@ -39,7 +39,10 @@ void Graphics::initGlew()
 void checkGLErrors(std::string functionName){
 	GLenum err = glGetError();
 	if(err != GL_NO_ERROR)
+	{
 		std::cerr << functionName << " ERROR!\n" << gluErrorString(err) << "\n";
+		exit(-1);
+	}
 }
 
 void Graphics::reshape(int w, int h)
@@ -172,51 +175,17 @@ void Graphics::draw(const std::list<Entity>& objects)
 
 void Graphics::draw(const Entity& entity)
 {
-
+	glBindVertexArray(entity.model->VAO_id);
 	glUseProgram(shader);
-	// clear the screen
-
 
 	MyMatrix modelViewMatrix = perspective * entity.position * entity.orientation;
-
 	// Pass the modelviewmatrix to shader
-	// this one only moves the camera back,
-	// maybe should do matrix class
 	glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_TRUE, &modelViewMatrix[0]);
 
-	// Dunno how this works with multiple textures loaded...
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, entity.GetTexture());
-	glUniform1i(textureLoc, 0);
+	glDrawElements(GL_TRIANGLES, 3*entity.model->num_polygons, GL_UNSIGNED_INT, 0);
 
-
-	// Set in_Position in shader to entitymodels location
-	glBindBuffer(GL_ARRAY_BUFFER, entity.model->VBOid);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
-
-	// Set in_Color in shader to entitymodels color
-	if(entity.model->colors != NULL)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, entity.model->colorid);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
-	}
-
-	if (entity.model->texcoords != NULL)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, entity.model->texcoordid);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, entity.model->numVertices, GL_FLOAT, GL_FALSE, sizeof(Vec<3>), BUFFER_OFFSET(0));
-	}
-	// Drawing happens here
-	glDrawArrays(entity.model->drawMode, 0, entity.model->numVertices);
-
-
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(0);
 	glUseProgram(0);
+
 	checkGLErrors("display");
 }
 

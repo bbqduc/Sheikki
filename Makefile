@@ -1,18 +1,18 @@
-CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -std=c++0x
+CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -std=c++0x -ggdb
 SFML = -lsfml-window -lsfml-system -lsfml-graphics
-CPPS = main.cpp mymatrix.cpp entity.cpp model.cpp graphics.cpp engine.cpp
-OBJS = main.o mymatrix.o entity.o model.o graphics.o engine.o
+CPPS = main.cpp mymatrix.cpp entity.cpp model.cpp graphics.cpp engine.cpp 3ds_loader.cpp
+OBJS = main.o mymatrix.o entity.o model.o graphics.o engine.o 3ds_loader.o
 .depend: depend
 depend: $(CPPS)
 	rm -f ./.depend
 	$(CC) $(CFLAGS) -MM $^>>./.depend;
 include .depend
-all: main.o mymatrix.o entity.o model.o graphics.o engine.o
-	$(CC) -o main main.o mymatrix.o entity.o model.o graphics.o engine.o -framework OpenGL -lGLEW $(SFML)
-windows: main.o mymatrix.o entity.o model.o graphics.o engine.o
-	$(CC) -o main main.o entity.o model.o graphics.o mymatrix.o engine.o -lmingw32 -lopengl32 -lglu32 -lglew32 $(SFML)
-linux: main.o mymatrix.o entity.o model.o graphics.o engine.o
-	$(CC) -o main main.o entity.o model.o graphics.o mymatrix.o engine.o -lGL -lGLU -lGLEW -lXrandr $(SFML)
+all: main.o mymatrix.o entity.o model.o graphics.o engine.o 3ds_loader.o
+	$(CC) -o main main.o mymatrix.o entity.o model.o graphics.o engine.o 3ds_loader.o -framework OpenGL -lGLEW $(SFML)
+windows: main.o mymatrix.o entity.o model.o graphics.o engine.o 3ds_loader.o
+	$(CC) -o main main.o entity.o model.o graphics.o mymatrix.o engine.o 3ds_loader.o -lmingw32 -lopengl32 -lglu32 -lglew32 $(SFML)
+linux: main.o mymatrix.o entity.o model.o graphics.o engine.o 3ds_loader.o
+	$(CC) -o main main.o entity.o model.o graphics.o mymatrix.o engine.o 3ds_loader.o -lGL -lGLU -lGLEW -lXrandr $(SFML)
 matrix_test: mymatrix.o test_matrix.o
 	$(CC) -o matrix_test mymatrix.o test_matrix.o
 main.o:
@@ -29,5 +29,7 @@ graphics.o:
 	$(CC) -c graphics.cpp
 engine.o:
 	$(CC) -c engine.cpp
+3ds_loader.o:
+	$(CC) -c 3ds_loader.cpp
 clean:
 	rm *.o
