@@ -8,7 +8,7 @@ varying vec2 texcoord;
 
 void main(void)
 {
-	gl_FragColor = texture2D(textures[0], texcoord);
+	gl_FragColor = texture2DLod(textures[0], texcoord, 0);	// Last parameter specifies the mipmap to use.
 	gl_FragColor += vec4(ex_Color, 1.0);
 	//gl_FragColor = vec4(ex_Color,1.0);
 	
