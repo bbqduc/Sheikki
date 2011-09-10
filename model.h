@@ -24,6 +24,7 @@ class Model
 	sf::FloatRect texturecoords;
 	GLuint VBO_vertices_id, VBO_indices_id, VBO_color_id, VBO_texcoord_id, VAO_id;
 	void InitVBOs();
+	void Init_Texture(const std::string& texturepath);
 	Model();
 
 	public:

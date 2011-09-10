@@ -54,6 +54,12 @@ Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec
 
 	InitVBOs();
 
+	Init_Texture(texturepath);
+
+}
+
+void Model::Init_Texture(const std::string& texturepath)
+{
 	// Load image, initialize texture and destroy the image.
 	sf::Image tmp;
 	tmp.LoadFromFile(texturepath);

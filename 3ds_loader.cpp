@@ -191,7 +191,10 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 
 	std::cout << "Texture coordinates ... ";
 	if(model.texcoords)
+	{
 		std::cout << " found!\n";
+		model.Init_Texture("TEXTURE_TEST.png");
+	}
 	else
 		std::cout << " not found!\n";
 

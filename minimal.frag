@@ -8,8 +8,8 @@ varying vec2 texcoord;
 
 void main(void)
 {
-//	gl_FragColor = texture2D(textures[0], texcoord);
-gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	gl_FragColor = texture2D(textures[0], texcoord);
+//gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 	//gl_FragColor = vec4(ex_Color,1.0);
 	
 	// Try replacing the above with the following:
