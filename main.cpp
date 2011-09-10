@@ -10,7 +10,7 @@ Model createSimpleTriangleModel()
 	Vec<float, 3>* vertices = new Vec<float, 3>[3];
 	Vec<float, 3>* colors = new Vec<float, 3>[3];
 	Vec<float, 2>* texcoords = new Vec<float, 2>[3];
-	Vec<uint16_t, 3>* polygons = new Vec<uint16_t, 3>;
+	Vec<GLuint, 3>* polygons = new Vec<GLuint, 3>;
 
 	colors[0].coords[0] = 0.5f;
 	colors[0].coords[1] = 0.5f;
@@ -46,8 +46,8 @@ Model createSimpleTriangleModel()
 	polygons[0][1] = 1;
 	polygons[0][2] = 2;
 
-	Model model(3, 1, vertices, polygons, texcoords, GL_TRIANGLES, "TEXTURE_TEST.png");
-//	Model model(3, 1, vertices, polygons, colors, GL_TRIANGLES);
+//	Model model(3, 1, vertices, polygons, texcoords, GL_TRIANGLES, "TEXTURE_TEST.png");
+	Model model(3, 1, vertices, polygons, colors, GL_TRIANGLES);
 	delete[] vertices;
 	delete[] colors;
 
@@ -58,8 +58,8 @@ int main()
 {
 	Engine engine;
 
-	Model model = createSimpleTriangleModel();
-//	Model model = Model_Loader_3ds::read_model("box.3ds");
+//	Model model = createSimpleTriangleModel();
+	Model model = Model_Loader_3ds::read_model("box.3ds");
 	Entity* entity = new Entity(&model);
 
 	(engine.addEntity(*entity)).setPos(0.5,0.5,3);

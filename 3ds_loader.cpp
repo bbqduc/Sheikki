@@ -74,12 +74,15 @@ uint16_t Model_Loader_3ds::read_polygons(std::istream& infile, Model& model)
 	assert(infile);
 	infile.read((char*)&model.num_polygons, 2);
 
-	model.polygons = new Vec<uint16_t, 3>[model.num_polygons];
+	model.polygons = new Vec<GLuint, 3>[model.num_polygons];
 	uint16_t face_flags; // We ignore these
 	for(uint16_t i = 0; i < model.num_polygons; ++i)
 	{
 		for(int j = 0; j < 3; ++j)
+		{
+			model.polygons[i][j] = 0;
 			infile.read((char*)&model.polygons[i][j], sizeof(uint16_t));
+		}
 		infile.read((char*)&face_flags, sizeof(uint16_t));
 	}
 
@@ -177,9 +180,23 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 		std::cout << ")\n";
 	}
 	
+	std::cout << "\nPolygons:\n";
+	for(int i = 0; i < model.num_polygons; ++i)
+	{
+		std::cout << '(' << model.polygons[i][0];
+		for(int j = 1; j < 3; ++j)
+			std::cout << ',' << model.polygons[i][j];
+		std::cout << ")\n";
+	}
 
+	std::cout << "Texture coordinates ... ";
+	if(model.texcoords)
+		std::cout << " found!\n";
+	else
+		std::cout << " not found!\n";
+
+	model.drawMode = GL_TRIANGLES;
 	model.InitVBOs();
 
-	// Just adding colors -- seems they are not part of .3ds
 	return model;
 }

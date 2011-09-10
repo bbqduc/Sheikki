@@ -11,13 +11,13 @@ Model::Model():
 	polygons(NULL)
 {}
 
-Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<uint16_t, 3>* polygons_, Vec<float, 3>* colors_, GLint drawMode_) :
+Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<GLuint, 3>* polygons_, Vec<float, 3>* colors_, GLint drawMode_) :
 	num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new Vec<float, 3>[num_vertices_]),
 	colors(new Vec<float, 3>[num_vertices_]),
 	texcoords(NULL),
-	polygons(new Vec<uint16_t, 3>[num_polygons]),
+	polygons(new Vec<GLuint, 3>[num_polygons]),
 	drawMode(drawMode_),
 	texture(0)
 {
@@ -32,13 +32,13 @@ Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec
 	InitVBOs();
 }
 
-Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<uint16_t, 3>* polygons_, Vec<float, 2>* texcoords_, GLint drawMode_, std::string texturepath) :
+Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<GLuint, 3>* polygons_, Vec<float, 2>* texcoords_, GLint drawMode_, std::string texturepath) :
 	num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new Vec<float, 3>[num_vertices_]),
 	colors(NULL),
 	texcoords(new Vec<float, 2>[num_vertices_]),
-	polygons(new Vec<uint16_t, 3>[num_polygons_]),
+	polygons(new Vec<GLuint, 3>[num_polygons_]),
 	drawMode(drawMode_),
 	texture(0)
 {
@@ -108,7 +108,7 @@ void Model::InitVBOs()
 
 	glGenBuffers(1, &VBO_indices_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_polygons*sizeof(Vec<uint16_t, 3>), &polygons[0][0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_polygons*sizeof(Vec<GLuint, 3>), &polygons[0][0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }

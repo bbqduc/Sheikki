@@ -18,7 +18,7 @@ class Model
 	int num_vertices, num_polygons;
 	Vec<float, 3> *vertices, *colors;
 	Vec<float, 2> *texcoords;
-	Vec<uint16_t, 3> *polygons;
+	Vec<GLuint, 3> *polygons;
 	GLint drawMode;
 	GLuint texture;
 	sf::FloatRect texturecoords;
@@ -27,8 +27,8 @@ class Model
 	Model();
 
 	public:
-	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<uint16_t, 3> *polygons, Vec<float, 3> *colors = NULL, GLint drawMode = GL_TRIANGLES);
-	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<uint16_t, 3> *polygons, Vec<float, 2> *texcoords, GLint drawMode, std::string texturepath);
+	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<GLuint, 3> *polygons, Vec<float, 3> *colors = NULL, GLint drawMode = GL_TRIANGLES);
+	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<GLuint, 3> *polygons, Vec<float, 2> *texcoords, GLint drawMode, std::string texturepath);
 	~Model();
 	GLuint GetTexture() const;
 };

@@ -7,9 +7,9 @@
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
 Graphics::Graphics()
-	:perspective(projectionMatrix(45.0f, 800.0f/600.0f, 1, 10))
+	:perspective(projectionMatrix(45.0f, 800.0f/600.0f, 1, 100))
 {
-	perspective = perspective * translationMatrix(0,0,-10);
+	perspective = perspective * translationMatrix(0,0,-100);
 
 	initGlew();
 	initShaders();
