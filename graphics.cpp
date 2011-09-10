@@ -41,6 +41,7 @@ void Graphics::initGlew()
 void Graphics::initGL()
 {
 	glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
 //	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
