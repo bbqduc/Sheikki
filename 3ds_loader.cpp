@@ -93,10 +93,10 @@ uint16_t Model_Loader_3ds::read_texcoords(std::istream& infile, Model& model)
 {
 	assert(infile);
 	uint16_t num_texcoords;
-	infile.read((char*)&num_texcoords, 2);
+	infile.read((char*)&num_texcoords, sizeof(uint16_t));
 
 	model.texcoords = new Vec<float, 2>[num_texcoords];
-	for(uint16_t i = 0; i < model.num_polygons; ++i)
+	for(uint16_t i = 0; i < model.num_vertices; ++i)
 		for(int j = 0; j < 2; ++j)
 			infile.read((char*)&model.texcoords[i][j], sizeof(float));
 
@@ -113,6 +113,8 @@ void Model_Loader_3ds::Chunk::read_header(std::istream& stream)
 
 void Model_Loader_3ds::Chunk::skip_body(std::istream& stream)
 {
+	assert(stream);
+	assert(length >= 6);
 	stream.seekg(length + chunk_beginning);
 }
 
@@ -142,6 +144,7 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 			case OBJECT_BLOCK:
 //				std::cout << "Found object block!\n";
 				// Reading object name
+				std::cout << "Reading object name\n";
 				model.name = read_model_name(infile);
 				std::cout << "Read object with name " << model.name << '\n';
 				break;
@@ -149,16 +152,20 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 //				std::cout << "Found triangular mesh!\n";
 				break;
 			case VERTICES_LIST:
+				std::cout << "Reading vertices\n";
 //				std::cout << "Found vertices list!\n";
 				std::cout << "Read " << read_vertices(infile, model) << " vertices.\n";
 				break;
 			case FACES_DESCRIPTION:
+				std::cout << "Reading polygons\n";
 //				std::cout << "Found FACES_DESCRIPTION!\n";
 				std::cout << "Read " << read_polygons(infile, model) << " polygons.\n";
 				break;
 			case MAPPING_COORDINATES_LIST:
+				std::cout << "Reading texture coordinates\n";
 //				std::cout << "Found texture coordinates!\n";
 				std::cout << "Read " << read_texcoords(infile, model) << " texture coordinates.\n";
+				chunk.skip_body(infile);
 				break;
 			default:
 //				std::cout << "Skipping\n";
@@ -171,7 +178,7 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 	assert(model.polygons);
 	assert(model.vertices);
 
-	std::cout << "Vertices:\n";
+/*	std::cout << "Vertices:\n";
 	for(int i = 0; i < model.num_vertices; ++i)
 	{
 		std::cout << '(' << model.vertices[i][0];
@@ -188,7 +195,7 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 			std::cout << ',' << model.polygons[i][j];
 		std::cout << ")\n";
 	}
-
+*/
 	std::cout << "Texture coordinates ... ";
 	if(model.texcoords)
 	{
