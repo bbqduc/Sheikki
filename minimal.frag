@@ -5,10 +5,12 @@
 varying  vec3 ex_Color;
 uniform sampler2D textures[1];
 varying vec2 texcoord;
+uniform float mipmap;
 
 void main(void)
 {
-	gl_FragColor = texture2DLod(textures[0], texcoord, 0);	// Last parameter specifies the mipmap to use.
+	if(mipmap!=0) gl_FragColor = mix(texture2DLod(textures[0], texcoord, mipmap), (texture2DLod(textures[0], texcoord, mipmap)), 0.8);
+	else gl_FragColor=texture2DLod(textures[0], texcoord, 0);
 	gl_FragColor += vec4(ex_Color, 1.0);
 	//gl_FragColor = vec4(ex_Color,1.0);
 	

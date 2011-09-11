@@ -18,6 +18,7 @@ class Graphics
 
 	GLint modelViewMatrixLoc;
 	GLint textureLoc;
+	GLint mipmapLoc;
 	GLuint shader;
 
 	MyMatrix perspective;

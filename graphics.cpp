@@ -164,6 +164,7 @@ void Graphics::initShaders(){
 
 	modelViewMatrixLoc = glGetUniformLocation(shader, "modelViewMatrix");
 	textureLoc = glGetUniformLocation(shader, "textures[0]");
+	mipmapLoc=glGetUniformLocation(shader, "mipmap");
 
 	if(modelViewMatrixLoc == -1)
 		std::cerr << "Couldn't get ModelViewMatrix-location!\n";
@@ -190,6 +191,11 @@ void Graphics::draw(const Entity& entity)
 	glUseProgram(shader);
 
 	MyMatrix modelViewMatrix = perspective * entity.position * entity.orientation;
+
+	//Specify mipmap by z-distance to the camera
+	int mipmap=abs(perspective.getZ()-modelViewMatrix.getZ()-perspective.getZ())/4;
+	glUniform1f(mipmapLoc, mipmap);
+
 	// Pass the modelviewmatrix to shader
 	glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_TRUE, &modelViewMatrix[0]);
 

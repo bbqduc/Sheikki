@@ -10,6 +10,9 @@ class MyMatrix
 	MyMatrix(float*);
 	float& operator[](int);
 	const float& operator[](int) const;
+	const float& getX() const {return values[3];}
+	const float& getY() const {return values[7];}
+	const float& getZ() const {return values[11];}
 	MyMatrix& operator+=(const MyMatrix&);
 	MyMatrix& operator-=(const MyMatrix&);
 	MyMatrix& operator*=(const MyMatrix&);
