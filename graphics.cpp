@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <sstream>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
@@ -32,11 +33,30 @@ void Graphics::initGlew()
 {
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
+	{
 		std::cerr << "GLEW INIT FAILED!\n";
+		exit(-1);
+	}
 	else
 		std::cerr << "Glew version : " << glewGetString(GLEW_VERSION)
 			<< "\nOpengl version : " << glGetString(GL_VERSION) 
 			<< "\nShading language version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+
+	std::stringstream temp; temp << glGetString(GL_SHADING_LANGUAGE_VERSION);
+	double glsl_version; temp >> glsl_version;
+	if(glsl_version >= 3.3)
+	{
+		std::cerr << "Using version 330 shaders!\n";
+		vertex_shader_path = "minimal.vert";
+		fragment_shader_path = "minimal.frag";
+	}
+	else
+	{
+		std::cerr << "Using version 120 shaders!\n";
+		vertex_shader_path = "minimal_120.vert";
+		fragment_shader_path = "minimal_120.frag";
+	}
+	
 }
 
 void Graphics::initGL()
@@ -45,7 +65,6 @@ void Graphics::initGL()
 	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
-//	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
 }
 
 void checkGLErrors(std::string functionName){
@@ -63,7 +82,7 @@ void Graphics::reshape(int w, int h)
 	checkGLErrors("reshape");
 }
 
-char* Graphics::loadFile(char *fname, GLint &fSize)
+char* Graphics::loadFile(const char *fname, GLint &fSize)
 {
 	std::ifstream::pos_type size;
 	char * memblock;
@@ -124,8 +143,8 @@ void Graphics::initShaders(){
 	// load shaders & get length of each
 	GLint vlen;
 	GLint flen;
-	vs = loadFile("minimal.vert",vlen);
-	fs = loadFile("minimal.frag",flen);
+	vs = loadFile(vertex_shader_path.c_str(),vlen);
+	fs = loadFile(fragment_shader_path.c_str(),flen);
 
 	const char * vv = vs;
 	const char * ff = fs;
@@ -170,19 +189,19 @@ void Graphics::initShaders(){
 //	MVLoc = glGetUniformLocation(shader, "MV");
 	NLoc = glGetUniformLocation(shader, "N");
 	textureLoc = glGetUniformLocation(shader, "textures[0]");
+	mipmapLoc=glGetUniformLocation(shader, "mipmap");
 
 	checkGLErrors("initShaders - binding uniforms");
 
 	assert(MVPLoc != -1);
 //	assert(MVLoc != -1);
 	assert(NLoc != -1);
+	assert(mipmapLoc != -1);
 
 	delete [] vs; // dont forget to free allocated memory
 	delete [] fs; // we allocated this in the loadFile function...
 
 	checkGLErrors("initShaders");
-	printShaderInfoLog(f);
-	printShaderInfoLog(v);
 
 }
 
@@ -202,6 +221,10 @@ void Graphics::draw(const Entity& entity)
 	MyMatrix<float,4> MVP = perspective * MV;
 	MyMatrix<float,3> N = shrink(MV);
 	N.transpose();
+
+	//Specify mipmap by z-distance to the camera
+	int mipmap=abs(perspective.getZ()-MVP.getZ()-perspective.getZ())/4;
+	glUniform1f(mipmapLoc, mipmap);
 
 	// Pass the modelviewmatrix to shader
 	glUniformMatrix4fv(MVPLoc, 1, GL_TRUE, &MVP[0]);

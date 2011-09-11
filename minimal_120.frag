@@ -1,10 +1,10 @@
-// Fragment Shader – file "minimal.frag"
+// Fragment Shader Â– file "minimal_120.frag"
 
-#version 330
+#version 120
 
 uniform sampler2D textures[1];
-in vec2 texcoord;
-in vec3 ex_Normal;
+varying vec2 texcoord;
+varying vec3 ex_Normal;
 uniform float mipmap;
 
 void main(void)

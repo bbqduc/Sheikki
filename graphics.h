@@ -9,6 +9,7 @@
 #include <GL/glew.h>
 #include "entity.h"
 #include <list>
+#include <string>
 
 class Graphics
 {
@@ -18,15 +19,17 @@ class Graphics
 
 	GLint MVPLoc, MVLoc, NLoc;
 	GLint textureLoc;
+	GLint mipmapLoc;
 	GLuint shader;
 
+	std::string vertex_shader_path, fragment_shader_path;
 	MyMatrix<float, 4> perspective;
 
 	void initFonts();
 	void initGlew();
 	void initGL();
 	void initShaders();
-	char* loadFile(char*, GLint&); // This is for loading a shader for a file
+	char* loadFile(const char*, GLint&); // This is for loading a shader for a file
 	void printShaderInfoLog(GLint); // Prints information in case something goes wrong
 	void draw(const Entity&);
 

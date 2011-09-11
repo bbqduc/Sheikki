@@ -14,6 +14,9 @@ class MyMatrix
 
 	T& operator[](int);
 	const T& operator[](int) const;
+	const float& getX() const {return values[3];}
+	const float& getY() const {return values[3+N];}
+	const float& getZ() const {return values[3+2*N];}
 	MyMatrix<T,N>& operator+=(const MyMatrix<T,N>&);
 	MyMatrix<T,N>& operator-=(const MyMatrix<T,N>&);
 	MyMatrix<T,N>& operator*=(const MyMatrix<T,N>&);

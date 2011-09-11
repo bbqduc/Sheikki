@@ -62,7 +62,6 @@ int main()
 	Model model = Model_Loader_3ds::read_model("box.3ds");
 	Entity* entity = new Entity(&model);
 
-//	(engine.addEntity(*entity)).setPos(0.5,0.5,3);
 	Entity& entityInTheEngine = engine.addEntity(*entity); // Need the reference because entity is copied by value to engines list of objects
 								// Maybe not the best way but at least cleaner memory management
 	delete entity;

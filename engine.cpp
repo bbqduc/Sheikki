@@ -104,9 +104,9 @@ void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 	if(keysDown[RIGHT])
 		entity->rotateYaw(0.005f*delta);
 	if(keysDown[A])
-		entity->thrusters(0.05f*delta);
+		entity->thrusters(0.005f*delta);
 	if(keysDown[Z])
-		entity->thrusters(-0.05f*delta);
+		entity->thrusters(-0.005f*delta);
 }
 
 Entity& Engine::addEntity(Entity& entity)
