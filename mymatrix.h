@@ -1,26 +1,36 @@
 #ifndef MYMATRIX_H
 #define MYMATRIX_H
 
+#include <stdint.h>
+#include <cstdlib>
 
+template<typename T, size_t N>
 class MyMatrix
 {
-	float values[16];
+	T values[N*N];
 	public:
-	MyMatrix(float value = 1.0f);
-	MyMatrix(float*);
-	float& operator[](int);
-	const float& operator[](int) const;
-	MyMatrix& operator+=(const MyMatrix&);
-	MyMatrix& operator-=(const MyMatrix&);
-	MyMatrix& operator*=(const MyMatrix&);
+	MyMatrix<T,N>(T value = 1.0f);
+	MyMatrix<T,N>(T*);
+
+	T& operator[](int);
+	const T& operator[](int) const;
+	MyMatrix<T,N>& operator+=(const MyMatrix<T,N>&);
+	MyMatrix<T,N>& operator-=(const MyMatrix<T,N>&);
+	MyMatrix<T,N>& operator*=(const MyMatrix<T,N>&);
+
+	void transpose();
 };
 
-MyMatrix operator-(const MyMatrix&, const MyMatrix&);
-MyMatrix operator+(const MyMatrix&, const MyMatrix&);
-MyMatrix operator*(const MyMatrix&, const MyMatrix&);
-MyMatrix rotationMatrix(float angle, float x, float y, float z);
-MyMatrix translationMatrix(float x, float y, float z);
-MyMatrix operator*(const MyMatrix& a, const MyMatrix& b);
-MyMatrix projectionMatrix(float fov, float aspect, float znear, float zfar);
-void printMatrix(const MyMatrix&);
+template<typename T, size_t N>
+MyMatrix<T,N> operator-(const MyMatrix<T,N>&, const MyMatrix<T,N>&);
+template<typename T, size_t N>
+MyMatrix<T,N> operator+(const MyMatrix<T,N>&, const MyMatrix<T,N>&);
+template<typename T>
+MyMatrix<T,4> operator*(const MyMatrix<T,4>&, const MyMatrix<T,4>&);
+template<typename T, size_t N>
+MyMatrix<T,N> operator*(const MyMatrix<T,N>& a, const MyMatrix<T,N>& b);
+template<typename T, size_t N>
+void printMatrix(const MyMatrix<T,N>&);
+
+#include "mymatrix.cpp"
 #endif

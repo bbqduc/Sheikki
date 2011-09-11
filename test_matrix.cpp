@@ -3,7 +3,7 @@
 #include <cmath>
 
 
-bool checkDiagonal(const MyMatrix& matrix, float value)
+bool checkDiagonal(const MyMatrix<float, 4>& matrix, float value)
 {
 	for(int i = 0; i < 16; ++i)
 		if(i % 5 == 0 && std::abs(matrix[i] - value) > 0.00001f)
@@ -13,7 +13,7 @@ bool checkDiagonal(const MyMatrix& matrix, float value)
 
 void testIdentity()
 {
-	MyMatrix matrix;
+	MyMatrix<float, 4> matrix;
 
 	std::cerr << "Identity matrix init : ";
 	if(checkDiagonal(matrix, 1.0f))
@@ -25,7 +25,7 @@ void testIdentity()
 void testDiagonal()
 {
 
-	MyMatrix matrix(10);
+	MyMatrix<float,4> matrix(10);
 	std::cerr << "Diagonal matrix init : ";
 
 	if(checkDiagonal(matrix, 10.0f))
@@ -44,7 +44,7 @@ void testArrayInit()
 	}
 
 	bool success = true;
-	MyMatrix matrix(array);
+	MyMatrix<float,4> matrix(array);
 	for(int i = 0; i < 16; ++i)
 		if(std::abs(matrix[i] - i) > 0.000001f)
 			success = false;
@@ -57,13 +57,13 @@ void testSummationSubstraction()
 	float array[16];
 	for(int i = 0; i < 16; ++i)
 		array[i] = i;
-	MyMatrix mat1(array);
+	MyMatrix<float, 4> mat1(array);
 
 	for(int i = 0; i < 16; ++i)
 		array[i] = 16-i;
-	MyMatrix mat2(array);
-	MyMatrix result = mat1 + mat2;
-	MyMatrix result2 = mat2 - mat1;
+	MyMatrix<float, 4> mat2(array);
+	MyMatrix<float, 4> result = mat1 + mat2;
+	MyMatrix<float, 4> result2 = mat2 - mat1;
 
 	bool success = true;
 	for(int i = 0; i < 16; ++i)
@@ -87,8 +87,8 @@ void testMatrixProduct()
 		array2[i] = i + 35;
 	}
 
-	MyMatrix mat1(array), mat2(array2);
-	MyMatrix result = mat1 * mat2;
+	MyMatrix<float, 4> mat1(array), mat2(array2);
+	MyMatrix<float, 4> result = mat1 * mat2;
 
 	float expectedResults[16] = 
 	{266, 272, 278, 284,
@@ -101,7 +101,18 @@ void testMatrixProduct()
 	for(int i = 0; i < 16; ++i)
 		if(std::abs(result[i] - expectedResults[i]) > 0.000001f)
 			success = false;
+	result.transpose();
 
+	for(int i = 0; i < 4; ++i)
+		for(int j = 4; j < 4; ++j)
+		if(std::abs(result[i*4+j] - expectedResults[j*4+i]) > 0.000001f)
+			success = false;
+
+	result.transpose();
+
+	for(int i = 0; i < 16; ++i)
+		if(std::abs(result[i] - expectedResults[i]) > 0.000001f)
+			success = false;
 	std::cerr << "Matrix multiplication : " << (success ? "OK.\n" : "Fail!\n");
 	if(!success)
 	{

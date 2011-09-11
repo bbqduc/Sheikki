@@ -8,7 +8,7 @@
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
 	Model* model;
-	MyMatrix position,
+	MyMatrix<float, 4> position,
 		 orientation; // Save position and orientation as matrices for efficiency
 	float velocity;
 	Vec<float, 3> movement_direction;

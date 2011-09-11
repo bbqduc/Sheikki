@@ -3,7 +3,7 @@
 #include "model.h"
 #include "entity.h"
 #include "3ds_loader.h"
-
+/*
 Model createSimpleTriangleModel()
 {
 
@@ -12,35 +12,35 @@ Model createSimpleTriangleModel()
 	Vec<float, 2>* texcoords = new Vec<float, 2>[3];
 	Vec<GLuint, 3>* polygons = new Vec<GLuint, 3>;
 
-	colors[0].coords[0] = 0.5f;
-	colors[0].coords[1] = 0.5f;
-	colors[0].coords[2] = 0.5f;
+	colors[0][0] = 0.5f;
+	colors[0][1] = 0.5f;
+	colors[0][2] = 0.5f;
 	for(int i = 1; i < 3; ++i){
-		colors[i].coords[0] = 1;
-		colors[i].coords[1] = 1;
-		colors[i].coords[2] = 1;
+		colors[i][0] = 1;
+		colors[i][1] = 1;
+		colors[i][2] = 1;
 	}
 
-	texcoords[0].coords[0] = 0;
-	texcoords[0].coords[1] = 0;
+	texcoords[0][0] = 0;
+	texcoords[0][1] = 0;
 
-	texcoords[1].coords[0] = 0.0f;
-	texcoords[1].coords[1] = 1;
+	texcoords[1][0] = 0.0f;
+	texcoords[1][1] = 1;
 
-	texcoords[2].coords[0] = 1;
-	texcoords[2].coords[1] = 0.0f;
+	texcoords[2][0] = 1;
+	texcoords[2][1] = 0.0f;
 
-	vertices[0].coords[0] = -0.5f;
-	vertices[0].coords[1] = 0;
-	vertices[0].coords[2] = -0.5f;
+	vertices[0][0] = -0.5f;
+	vertices[0][1] = 0;
+	vertices[0][2] = -0.5f;
 
-	vertices[1].coords[0] = 0.5f;
-	vertices[1].coords[1] = 0;
-	vertices[1].coords[2] = -0.5f;
+	vertices[1][0] = 0.5f;
+	vertices[1][1] = 0;
+	vertices[1][2] = -0.5f;
 
-	vertices[2].coords[0] = 0;
-	vertices[2].coords[1] = 0;
-	vertices[2].coords[2] = 0.5f;
+	vertices[2][0] = 0;
+	vertices[2][1] = 0;
+	vertices[2][2] = 0.5f;
 
 	polygons[0][0] = 0;
 	polygons[0][1] = 1;
@@ -52,7 +52,7 @@ Model createSimpleTriangleModel()
 	delete[] colors;
 
 	return model;
-}
+}*/
 
 int main()
 {
@@ -62,7 +62,7 @@ int main()
 	Model model = Model_Loader_3ds::read_model("box.3ds");
 	Entity* entity = new Entity(&model);
 
-	(engine.addEntity(*entity)).setPos(0.5,0.5,3);
+//	(engine.addEntity(*entity)).setPos(0.5,0.5,3);
 	Entity& entityInTheEngine = engine.addEntity(*entity); // Need the reference because entity is copied by value to engines list of objects
 								// Maybe not the best way but at least cleaner memory management
 	delete entity;

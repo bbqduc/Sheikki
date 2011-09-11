@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "matrix_utils.h"
 #include "sheikki_wrappers.h"
 #include <GL/glew.h>
 #include <iostream>
@@ -41,6 +42,7 @@ void Graphics::initGlew()
 void Graphics::initGL()
 {
 	glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
 //	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)
@@ -152,7 +154,7 @@ void Graphics::initShaders(){
 	shader = glCreateProgram();
 
 	glBindAttribLocation(shader,0, "in_Position");
-	glBindAttribLocation(shader,1, "in_Color");
+	glBindAttribLocation(shader,1, "in_Normal");
 	glBindAttribLocation(shader,2, "in_TexCoords");
 
 	glAttachShader(shader,v);
@@ -161,11 +163,19 @@ void Graphics::initShaders(){
 	glLinkProgram(shader);
 	glUseProgram(shader);
 
-	modelViewMatrixLoc = glGetUniformLocation(shader, "modelViewMatrix");
+	printShaderInfoLog(f);
+	printShaderInfoLog(v);
+
+	MVPLoc = glGetUniformLocation(shader, "MVP");
+//	MVLoc = glGetUniformLocation(shader, "MV");
+	NLoc = glGetUniformLocation(shader, "N");
 	textureLoc = glGetUniformLocation(shader, "textures[0]");
 
-	if(modelViewMatrixLoc == -1)
-		std::cerr << "Couldn't get ModelViewMatrix-location!\n";
+	checkGLErrors("initShaders - binding uniforms");
+
+	assert(MVPLoc != -1);
+//	assert(MVLoc != -1);
+	assert(NLoc != -1);
 
 	delete [] vs; // dont forget to free allocated memory
 	delete [] fs; // we allocated this in the loadFile function...
@@ -188,9 +198,15 @@ void Graphics::draw(const Entity& entity)
 	sheikki_glBindVertexArray(entity.model->VAO_id);
 	glUseProgram(shader);
 
-	MyMatrix modelViewMatrix = perspective * entity.position * entity.orientation;
+	MyMatrix<float,4> MV = entity.position * entity.orientation;
+	MyMatrix<float,4> MVP = perspective * MV;
+	MyMatrix<float,3> N = shrink(MV);
+	N.transpose();
+
 	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_TRUE, &modelViewMatrix[0]);
+	glUniformMatrix4fv(MVPLoc, 1, GL_TRUE, &MVP[0]);
+//	glUniformMatrix4fv(MVLoc, 1, GL_TRUE, &MV[0]);
+	glUniformMatrix3fv(NLoc, 1, GL_TRUE, &N[0]);
 
 	glDrawElements(GL_TRIANGLES, 3*entity.model->num_polygons, GL_UNSIGNED_INT, 0);
 

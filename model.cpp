@@ -7,27 +7,21 @@ Model::Model():
 	num_vertices(0),
 	num_polygons(0),
 	vertices(NULL),
-	colors(NULL),
 	texcoords(NULL),
 	polygons(NULL)
 {}
 
-Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<GLuint, 3>* polygons_, Vec<float, 3>* colors_, GLint drawMode_) :
+Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec<GLuint, 3>* polygons_, GLint drawMode_) :
 	num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new Vec<float, 3>[num_vertices_]),
-	colors(new Vec<float, 3>[num_vertices_]),
 	texcoords(NULL),
 	polygons(new Vec<GLuint, 3>[num_polygons]),
 	drawMode(drawMode_),
 	texture(0)
 {
 	for(int i = 0; i < num_vertices; ++i)
-	{
 		vertices[i] = vertices_[i];
-		if(colors != NULL)
-			colors[i] = colors_[i];
-	}
 	for(int i = 0; i < num_polygons; ++i)
 		polygons[i] = polygons_[i];
 	InitVBOs();
@@ -37,7 +31,6 @@ Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec
 	num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new Vec<float, 3>[num_vertices_]),
-	colors(NULL),
 	texcoords(new Vec<float, 2>[num_vertices_]),
 	polygons(new Vec<GLuint, 3>[num_polygons_]),
 	drawMode(drawMode_),
@@ -56,6 +49,30 @@ Model::Model(int num_vertices_, int num_polygons_, Vec<float, 3>* vertices_, Vec
 
 	Init_Texture(texturepath);
 
+}
+
+void Model::calculate_normals()
+{
+	normals = new Vec<float, 3>[num_vertices];	
+	for(int i = 0; i < num_vertices; ++i)
+		normals[i] *= 0;
+
+	Vec<float, 3> a_to_b, a_to_c;
+
+	for(int i = 0; i < num_polygons; ++i)
+	{
+		a_to_b = vertices[polygons[i][1]] - vertices[polygons[i][0]];
+		a_to_c = vertices[polygons[i][2]] - vertices[polygons[i][0]];
+
+		Vec<float, 3> cross_product = cross(a_to_b, a_to_c);
+		cross_product.set_length(1.0f);
+
+		for(int j = 0; j < 3; ++j)
+			normals[polygons[i][j]] += cross_product;
+	}
+
+	for(int i = 0; i < num_vertices; ++i)
+		normals[i].set_length(1.0f);
 }
 
 void Model::Init_Texture(const std::string& texturepath)
@@ -82,6 +99,7 @@ void Model::Init_Texture(const std::string& texturepath)
 
 void Model::InitVBOs()
 {
+	calculate_normals();
 	// initialize VAO
 	sheikki_glGenVertexArrays(1, &VAO_id);
 	sheikki_glBindVertexArray(VAO_id);
@@ -94,15 +112,12 @@ void Model::InitVBOs()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 3>), 0);
 
-	// initialize VBO for colors of vertices
-	if(colors != NULL)
-	{
-		glGenBuffers(1, &VBO_color_id);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_color_id);
-		glBufferData(GL_ARRAY_BUFFER, num_vertices*sizeof(Vec<float, 3>), colors[0].coords, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 3>), 0);
-	}
+	// initialize VBO for normals of vertices
+	glGenBuffers(1, &VBO_normals_id);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_normals_id);
+	glBufferData(GL_ARRAY_BUFFER, num_vertices*sizeof(Vec<float, 3>), &normals[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vec<float, 3>), 0);
 
 	if (texcoords != NULL)
 	{

@@ -1,18 +1,20 @@
 // Vertex Shader – file "minimal.vert"
 
-#version 120
+#version 330
 
-attribute vec3 in_Position;
-attribute vec3 in_Color;	
-attribute vec2 in_TexCoords;
+in vec3 in_Position;
+in vec3 in_Normal;	
+in vec2 in_TexCoords;
 
-varying vec2 texcoord;
-varying vec3 ex_Color;
-uniform mat4 modelViewMatrix;
+out vec2 texcoord;
+out vec3 ex_Normal;
+uniform mat4 MVP;
+uniform mat3 N;
+//uniform mat4 MV;
 
 void main(void)
 {
 	texcoord = in_TexCoords;
-	ex_Color = in_Color; // vec3(1.0,0.0,1.0);
-	gl_Position = modelViewMatrix * vec4(in_Position, 1.0);
+	ex_Normal = N * in_Normal;
+	gl_Position = MVP * vec4(in_Position, 1.0);
 }

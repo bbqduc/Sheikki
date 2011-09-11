@@ -16,11 +16,11 @@ class Graphics
 	FT_Face fontInfo;
 	FT_Uint charIndex;*/
 
-	GLint modelViewMatrixLoc;
+	GLint MVPLoc, MVLoc, NLoc;
 	GLint textureLoc;
 	GLuint shader;
 
-	MyMatrix perspective;
+	MyMatrix<float, 4> perspective;
 
 	void initFonts();
 	void initGlew();

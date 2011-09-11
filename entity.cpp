@@ -1,5 +1,6 @@
 #include "entity.h"
 #include <iostream>
+#include "matrix_utils.h"
 
 Entity::Entity(Model* model_)
 	: model(model_),
@@ -21,19 +22,19 @@ void Entity::setPos(float x, float y, float z)
 
 void Entity::rotateYaw(float yaw)
 {
-	MyMatrix rotation = rotationMatrix(yaw, orientation[1], orientation[5], orientation[9]);
+	MyMatrix<float, 4> rotation = rotationMatrix(yaw, orientation[1], orientation[5], orientation[9]);
 	orientation = rotation * orientation;
 }
 	
 void Entity::rotatePitch(float pitch)
 {
-	MyMatrix rotation = rotationMatrix(pitch, orientation[0], orientation[4], orientation[8]);
+	MyMatrix<float, 4> rotation = rotationMatrix(pitch, orientation[0], orientation[4], orientation[8]);
 	orientation = rotation * orientation;
 }
 
 void Entity::rotateRoll(float roll)
 {
-	MyMatrix rotation = rotationMatrix(roll, orientation[2], orientation[6], orientation[10]);
+	MyMatrix<float, 4> rotation = rotationMatrix(roll, orientation[2], orientation[6], orientation[10]);
 	orientation = rotation * orientation;
 }
 
