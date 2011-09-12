@@ -8,7 +8,7 @@ attribute vec2 in_TexCoords;
 
 varying vec2 texcoord;
 varying vec3 ex_Normal;
-out vec4 pos;
+varying vec4 pos;
 uniform mat4 MVP;
 uniform mat3 N;
 //uniform mat4 MV;

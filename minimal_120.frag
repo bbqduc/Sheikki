@@ -5,7 +5,8 @@
 uniform sampler2D textures[1];
 varying vec2 texcoord;
 varying vec3 ex_Normal;
-in vec4 pos;
+varying vec4 pos;
+float mipmap;
 
 void main(void)
 {
