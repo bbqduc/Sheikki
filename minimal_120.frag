@@ -5,13 +5,9 @@
 uniform sampler2D textures[1];
 varying vec2 texcoord;
 varying vec3 ex_Normal;
-varying vec4 pos;
-float mipmap;
 
 void main(void)
 {
-	mipmap=pos.z/3;
-	if(mipmap!=0) gl_FragColor = mix(texture2DLod(textures[0], texcoord, mipmap), (texture2DLod(textures[0], texcoord, mipmap+1)), 0.5);
-	else gl_FragColor=texture2D(textures[0], texcoord);
+	gl_FragColor=mix(texture2DLod(textures[0], texcoord, gl_FragCoord.z*2), texture2DLod(textures[0],texcoord, (gl_FragCoord.z*2)+1), mod(gl_FragCoord.z*2,1));
 	gl_FragColor += vec4(ex_Normal, 1.0f);
 }
