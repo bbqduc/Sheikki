@@ -9,6 +9,6 @@ out vec4 color;
 
 void main(void)
 {
-	color=mix(textureLod(textures[0], texcoord, gl_FragCoord.z*2), textureLod(textures[0],texcoord, (gl_FragCoord.z*2)+1), mod(gl_FragCoord.z*2,1));
+	color = texture2D(textures[0], texcoord);
 	color += vec4(ex_Normal, 1.0f);
 }
