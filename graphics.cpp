@@ -189,14 +189,12 @@ void Graphics::initShaders(){
 //	MVLoc = glGetUniformLocation(shader, "MV");
 	NLoc = glGetUniformLocation(shader, "N");
 	textureLoc = glGetUniformLocation(shader, "textures[0]");
-	mipmapLoc=glGetUniformLocation(shader, "mipmap");
 
 	checkGLErrors("initShaders - binding uniforms");
 
 	assert(MVPLoc != -1);
 //	assert(MVLoc != -1);
 	assert(NLoc != -1);
-	assert(mipmapLoc != -1);
 
 	delete [] vs; // dont forget to free allocated memory
 	delete [] fs; // we allocated this in the loadFile function...
@@ -221,10 +219,6 @@ void Graphics::draw(const Entity& entity)
 	MyMatrix<float,4> MVP = perspective * MV;
 	MyMatrix<float,3> N = shrink(MV);
 	N.transpose();
-
-	//Specify mipmap by z-distance to the camera
-	int mipmap=abs(perspective.getZ()-MVP.getZ()-perspective.getZ())/4;
-	glUniform1f(mipmapLoc, mipmap);
 
 	// Pass the modelviewmatrix to shader
 	glUniformMatrix4fv(MVPLoc, 1, GL_TRUE, &MVP[0]);
