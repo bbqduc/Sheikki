@@ -5,6 +5,7 @@
 uniform sampler2D textures[1];
 varying vec2 texcoord;
 varying vec3 ex_Normal;
+in vec4 pos;
 
 void main(void)
 {
