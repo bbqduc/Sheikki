@@ -60,12 +60,19 @@ int main()
 
 //	Model model = createSimpleTriangleModel();
 	Model model = Model_Loader_3ds::read_model("box.3ds");
+	Model plane = Model_Loader_3ds::read_model("plane.3ds");
 	Entity* entity = new Entity(&model);
+	Entity* plane_e = new Entity(&plane);
 
 	Entity& entityInTheEngine = engine.addEntity(*entity); // Need the reference because entity is copied by value to engines list of objects
 								// Maybe not the best way but at least cleaner memory management
+	DefaultShader s("minimal.vert","dark.frag");
+	Entity& plane_eng = engine.addEntity(*plane_e);
 	delete entity;
+	delete plane_e;
 
+	plane_eng.rotatePitch(3.14f/2);
+	plane_eng.move(0,-3,5);
 	entityInTheEngine.rotatePitch(3.14f / 2);
 	entityInTheEngine.move(0,0,5);
 	engine.setActive(entityInTheEngine); // Sets entityInTheEngine to be the target of user input (for example movement)

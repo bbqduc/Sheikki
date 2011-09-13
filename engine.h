@@ -12,7 +12,7 @@ class Engine
 	bool keysDown[8];
 	sf::Window window;	
 	Graphics graphics;
-	std::list<Entity> objects;
+	std::list<Entity*, Shader*> objects;
 	Entity* activeEntity; // This is the object being controlled by user input
 
 	void processEvents();

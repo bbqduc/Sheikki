@@ -16,7 +16,7 @@
 
 	initGlew();
 	initGL();
-	initShaders();
+	defaultShader.init();
 	//	initFonts();
 }
 
@@ -47,14 +47,12 @@ void Graphics::initGlew()
 	if(glsl_version >= 3.3)
 	{
 		std::cerr << "Using version 330 shaders!\n";
-		vertex_shader_path = "minimal.vert";
-		fragment_shader_path = "minimal.frag";
+		defaultShader.setShaderPaths("minimal.vert", "minimal.frag");
 	}
 	else
 	{
 		std::cerr << "Using version 120 shaders!\n";
-		vertex_shader_path = "minimal_120.vert";
-		fragment_shader_path = "minimal_120.frag";
+		defaultShader.setShaderPaths("minimal_120.vert", "minimal_120.frag");
 	}
 	
 }
@@ -71,7 +69,7 @@ void checkGLErrors(std::string functionName){
 	GLenum err = glGetError();
 	if(err != GL_NO_ERROR)
 	{
-		std::cerr << functionName << " ERROR!\n" << gluErrorString(err) << "\n";
+		std::cerr << functionName << " ERROR: " << gluErrorString(err) << "\n";
 		exit(-1);
 	}
 }
@@ -82,7 +80,7 @@ void Graphics::reshape(int w, int h)
 	checkGLErrors("reshape");
 }
 
-char* Graphics::loadFile(const char *fname, GLint &fSize)
+char* Shader::loadFile(const char *fname, GLint &fSize)
 {
 	std::ifstream::pos_type size;
 	char * memblock;
@@ -108,7 +106,7 @@ char* Graphics::loadFile(const char *fname, GLint &fSize)
 	return memblock;
 }
 
-void Graphics::printShaderInfoLog(GLint shader)
+void Shader::printShaderInfoLog(GLint shader)
 {
 	int infoLogLen = 0;
 	int charsWritten = 0;
@@ -132,7 +130,8 @@ void Graphics::printShaderInfoLog(GLint shader)
 	checkGLErrors("shaderinfolog");
 }
 
-void Graphics::initShaders(){
+void Shader::init()
+{
 	GLuint f, v;
 
 	char *vs,*fs;
@@ -170,48 +169,45 @@ void Graphics::initShaders(){
 		printShaderInfoLog(f);
 	} 
 
-	shader = glCreateProgram();
+	id = glCreateProgram();
 
-	glBindAttribLocation(shader,0, "in_Position");
-	glBindAttribLocation(shader,1, "in_Normal");
-	glBindAttribLocation(shader,2, "in_TexCoords");
+	bindAttributes();
 
-	glAttachShader(shader,v);
-	glAttachShader(shader,f);
+	glAttachShader(id,v);
+	glAttachShader(id,f);
 
-	glLinkProgram(shader);
-	glUseProgram(shader);
+
+	glLinkProgram(id);
+	glUseProgram(id);
 
 	printShaderInfoLog(f);
 	printShaderInfoLog(v);
 
-	MVPLoc = glGetUniformLocation(shader, "MVP");
-//	MVLoc = glGetUniformLocation(shader, "MV");
-	NLoc = glGetUniformLocation(shader, "N");
-	textureLoc = glGetUniformLocation(shader, "textures[0]");
+	setUniformLocations();
 
 	checkGLErrors("initShaders - binding uniforms");
 
-	assert(MVPLoc != -1);
-//	assert(MVLoc != -1);
-	assert(NLoc != -1);
+	//assert(MVPLoc != -1);
+	//assert(NLoc != -1);
 
 	delete [] vs; // dont forget to free allocated memory
 	delete [] fs; // we allocated this in the loadFile function...
 
 	checkGLErrors("initShaders");
-
 }
 
-void Graphics::draw(const std::list<Entity>& objects)
+void Graphics::draw(const std::list<std::pair<Entity, GLuint> >& objects)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for(std::list<Entity>::const_iterator i = objects.begin(); i != objects.end(); ++i)
+	for(std::list<std::pair<Entity, GLuint> >::const_iterator i = objects.begin(); i != objects.end(); ++i)
 		draw(*i);
 }
 
-void Graphics::draw(const Entity& entity)
+void Graphics::draw(const std::pair<Entity, GLuint>& pair)
 {
+	Entity&=pair->first;
+	shader=pair->second;
+	if(!shader) shader=defaultShader.getId();
 	sheikki_glBindVertexArray(entity.model->VAO_id);
 	glUseProgram(shader);
 
@@ -221,9 +217,8 @@ void Graphics::draw(const Entity& entity)
 	N.transpose();
 
 	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(MVPLoc, 1, GL_TRUE, &MVP[0]);
-//	glUniformMatrix4fv(MVLoc, 1, GL_TRUE, &MV[0]);
-	glUniformMatrix3fv(NLoc, 1, GL_TRUE, &N[0]);
+	glUniformMatrix4fv(defaultShader.GetModelviewMatrix(), 1, GL_TRUE, &MVP[0]);
+	glUniformMatrix3fv(defaultShader.GetNormalMatrix(), 1, GL_TRUE, &N[0]);
 
 	glDrawElements(GL_TRIANGLES, 3*entity.model->num_polygons, GL_UNSIGNED_INT, 0);
 
