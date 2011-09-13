@@ -1,4 +1,4 @@
-CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -std=c++0x -ggdb -I/usr/local/include
+CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -std=c++0x -O3 -I/usr/local/include
 SFML = -lsfml-window -lsfml-system -lsfml-graphics
 CPPS = main.cpp entity.cpp model.cpp graphics.cpp engine.cpp 3ds_loader.cpp matrix_utils.cpp mymatrix.cpp
 OBJS = main.o entity.o model.o graphics.o engine.o 3ds_loader.o matrix_utils.o
