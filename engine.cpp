@@ -63,16 +63,6 @@ void Engine::handleKeyPress(sf::Event& event)
 			keysDown[Z] = true;
 		if(event.Key.Code == sf::Keyboard::Q)
 			keysDown[Q] = true;
-		Shader* s=getShader(activeEntity);
-		if(s!=unused_shaders.back())
-		{
-			if(shader_storage.size()==0) shader_storage.push_back(s);
-			renderWithShader(activeEntity, unused_shaders.back());
-		}
-		else
-		{
-			renderWithShader(activeEntity, shader_storage.back());
-		}
 		if(event.Key.Code == sf::Keyboard::E)
 			keysDown[E] = true;
 		if(event.Key.Code == sf::Keyboard::Space)
