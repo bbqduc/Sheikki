@@ -213,10 +213,8 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 {
 	Entity* e=pair.first;
 	Shader* s=pair.second;
-	std::cout << "Using default shader: " << (s==NULL) << std::endl;
 	if(!s) s=&defaultShader;
 	sheikki_glBindVertexArray(e->model->VAO_id);
-	std::cout << "Using shader: " << s->getId() << std::endl;
 	glUseProgram(s->getId());
 
 	MyMatrix<float,4> MV = e->position * e->orientation;

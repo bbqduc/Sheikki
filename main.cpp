@@ -66,8 +66,10 @@ int main()
 
 	engine.addEntity(&entity);
 
-	SimpleShader s("minimal.vert","dark.frag");
-	engine.addEntity(&plane_e, &s);
+	SimpleShader dark("minimal.vert","dark.frag");
+	SimpleShader plain("minimal.vert","plain.frag");
+	engine.addShader(&plain);
+	engine.addEntity(&plane_e, &dark);
 
 	plane_e.rotatePitch(3.14f/2);
 	plane_e.move(0,-3,5);

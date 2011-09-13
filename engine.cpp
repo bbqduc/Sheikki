@@ -1,14 +1,15 @@
 #include "engine.h"
 #include <iostream>
 
-
 Engine::Engine(int width, int height, int depth)
 	: window(sf::VideoMode(width, height, depth), "Shake-engine"),
 	graphics(),
 	objects()
 {
-	for(int i = 0; i < 6; ++i)
+	for(int i = 0; i < KEYS; ++i)
+	{
 		keysDown[i] = false;
+	}
 }
 
 void Engine::gameLoop()
@@ -62,8 +63,20 @@ void Engine::handleKeyPress(sf::Event& event)
 			keysDown[Z] = true;
 		if(event.Key.Code == sf::Keyboard::Q)
 			keysDown[Q] = true;
+		Shader* s=getShader(activeEntity);
+		if(s!=unused_shaders.back())
+		{
+			if(shader_storage.size()==0) shader_storage.push_back(s);
+			renderWithShader(activeEntity, unused_shaders.back());
+		}
+		else
+		{
+			renderWithShader(activeEntity, shader_storage.back());
+		}
 		if(event.Key.Code == sf::Keyboard::E)
 			keysDown[E] = true;
+		if(event.Key.Code == sf::Keyboard::Space)
+			keysDown[SPACE] = true;
 	}	
 
 	if(event.Type == sf::Event::KeyReleased)
@@ -84,6 +97,8 @@ void Engine::handleKeyPress(sf::Event& event)
 			keysDown[Q] = false;
 		if(event.Key.Code == sf::Keyboard::E)
 			keysDown[E] = false;
+		if(event.Key.Code == sf::Keyboard::Space)
+			keysDown[SPACE] = false;
 	}
 }
 
@@ -107,11 +122,63 @@ void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 		entity->thrusters(0.005f*delta);
 	if(keysDown[Z])
 		entity->thrusters(-0.005f*delta);
+
+	static bool justonce=false;
+	if(keysDown[SPACE])
+	{
+		if(!justonce)
+		{
+			Shader* s=getShader(activeEntity);
+			if(s!=unused_shaders.back())
+			{
+				if(shader_storage.size()==0) shader_storage.push_back(s);
+				renderWithShader(activeEntity, unused_shaders.back());
+			}
+			else
+			{
+				renderWithShader(activeEntity, shader_storage.back());
+			}
+			justonce=true;
+		}
+	}
+	else justonce=false;
 }
 
 void Engine::addEntity(Entity* entity, Shader* shader)
 {
 	objects.push_back(std::make_pair(entity,shader));
+}
+
+void Engine::renderWithShader(Entity* entity, Shader* shader)
+{
+	bool success=false;
+	for(std::list<std::pair<Entity*, Shader*> >::iterator it=objects.begin(); it!=objects.end(); ++it)
+	{
+		if(it->first==entity)
+		{
+			it->second=shader;
+			success=true;
+			break;
+		}
+	}
+	if(!success) std::cerr << "Couldn't set shader to entity. Entity doesn't exist." << std::endl;
+}
+
+Shader* Engine::getShader(Entity* entity) const
+{
+	bool success=false;
+	Shader* ret=NULL;
+	for(std::list<std::pair<Entity*, Shader*> >::const_iterator it=objects.begin(); it!=objects.end(); ++it)
+	{
+		if(it->first==entity)
+		{
+			ret=it->second;
+			success=true;
+			break;
+		}
+	}
+	if(!success) std::cerr << "Couldn't get shader from entity. Entity doesn't exist." << std::endl;
+	return ret;
 }
 
 void Engine::setActive(Entity* entity)
