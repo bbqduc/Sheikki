@@ -14,7 +14,8 @@ uniform mat3 N;
 
 void main(void)
 {
-	texcoord = in_TexCoords;
+	texcoord[0] = 1-in_TexCoords[0];
+	texcoord[1] = in_TexCoords[1];
 	ex_Normal = N * in_Normal;
 	gl_Position = MVP * vec4(in_Position, 1.0);
 }
