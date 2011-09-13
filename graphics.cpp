@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include "matrix_utils.h"
 #include "sheikki_wrappers.h"
+#include "machineinfo.h"
 #include <GL/glew.h>
 #include <iostream>
 #include <fstream>
@@ -43,18 +44,16 @@ void Graphics::initGlew()
 			<< "\nShading language version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 
 	std::stringstream temp; temp << glGetString(GL_SHADING_LANGUAGE_VERSION);
-	double glsl_version; temp >> glsl_version;
-	if(glsl_version >= 3.3)
+	temp >> MachineInfo::glsl_version;
+	if(MachineInfo::glsl_version >= 3.3)
 	{
 		std::cerr << "Using version 330 shaders!\n";
-		defaultShader.setShaderPaths("minimal.vert", "minimal.frag");
 	}
 	else
 	{
 		std::cerr << "Using version 120 shaders!\n";
-		defaultShader.setShaderPaths("minimal_120.vert", "minimal_120.frag");
 	}
-	
+	defaultShader.setShaderPaths("minimal.vert", "minimal.frag");
 }
 
 void Graphics::initGL()
@@ -104,6 +103,16 @@ char* Shader::loadFile(const char *fname, GLint &fSize)
 		exit(1);
 	}
 	return memblock;
+}
+
+void Shader::setShaderPaths(const char* vp, const char* fp)
+{
+	std::string vertex=vp;
+	std::string fragment=fp;
+	if(MachineInfo::glsl_version<3.3) vertex+="120";
+	if(MachineInfo::glsl_version<3.3) fragment+="120";
+	vertex_shader_path=vertex;
+	fragment_shader_path=fragment;
 }
 
 void Shader::printShaderInfoLog(GLint shader)

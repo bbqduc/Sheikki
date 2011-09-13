@@ -25,15 +25,11 @@ class Shader
 	public:
 		Shader() {initialized=false;}
 		Shader(const char* vp, const char* fp)
-			: id(0), MVPLoc(0), NLoc(0), vertex_shader_path(vp), fragment_shader_path(fp), initialized(false) {}
+			: id(0), MVPLoc(0), NLoc(0) {initialized=false;setShaderPaths(vp, fp);}
 		virtual ~Shader() {}
 		char* loadFile(const char*, GLint&); // This is for loading a shader for a file
 		void init();
-		void setShaderPaths(const char* vp, const char* fp)
-		{
-			vertex_shader_path=vp;
-			fragment_shader_path=fp;
-		}
+		void setShaderPaths(const char* vp, const char* fp);
 		GLuint getId() const {assert(initialized); return id;}
 		static void printShaderInfoLog(GLint shader); // Prints information in case something goes wrong
 
