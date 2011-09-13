@@ -109,14 +109,13 @@ void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 		entity->thrusters(-0.005f*delta);
 }
 
-Entity& Engine::addEntity(Entity& entity)
+void Engine::addEntity(Entity* entity, Shader* shader)
 {
-	objects.push_back(entity);
-	return objects.back();
+	objects.push_back(std::make_pair(entity,shader));
 }
 
-void Engine::setActive(Entity& entity)
+void Engine::setActive(Entity* entity)
 {
-	activeEntity = &entity;
+	activeEntity = entity;
 }
 

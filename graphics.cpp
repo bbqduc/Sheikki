@@ -132,6 +132,7 @@ void Shader::printShaderInfoLog(GLint shader)
 
 void Shader::init()
 {
+	assert(!initialized);
 	GLuint f, v;
 
 	char *vs,*fs;
@@ -144,6 +145,9 @@ void Shader::init()
 	GLint flen;
 	vs = loadFile(vertex_shader_path.c_str(),vlen);
 	fs = loadFile(fragment_shader_path.c_str(),flen);
+
+	std::cout << "Vertex shader " << vertex_shader_path << " loaded." << std::endl;
+	std::cout << "Fragment shader " << fragment_shader_path << " loaded." << std::endl;
 
 	const char * vv = vs;
 	const char * ff = fs;
@@ -194,33 +198,37 @@ void Shader::init()
 	delete [] fs; // we allocated this in the loadFile function...
 
 	checkGLErrors("initShaders");
+
+	initialized=true;
 }
 
-void Graphics::draw(const std::list<std::pair<Entity, GLuint> >& objects)
+void Graphics::draw(const std::list<std::pair<Entity*, Shader*> >& objects)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for(std::list<std::pair<Entity, GLuint> >::const_iterator i = objects.begin(); i != objects.end(); ++i)
+	for(std::list<std::pair<Entity*, Shader*> >::const_iterator i = objects.begin(); i != objects.end(); ++i)
 		draw(*i);
 }
 
-void Graphics::draw(const std::pair<Entity, GLuint>& pair)
+void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 {
-	Entity&=pair->first;
-	shader=pair->second;
-	if(!shader) shader=defaultShader.getId();
-	sheikki_glBindVertexArray(entity.model->VAO_id);
-	glUseProgram(shader);
+	Entity* e=pair.first;
+	Shader* s=pair.second;
+	std::cout << "Using default shader: " << (s==NULL) << std::endl;
+	if(!s) s=&defaultShader;
+	sheikki_glBindVertexArray(e->model->VAO_id);
+	std::cout << "Using shader: " << s->getId() << std::endl;
+	glUseProgram(s->getId());
 
-	MyMatrix<float,4> MV = entity.position * entity.orientation;
+	MyMatrix<float,4> MV = e->position * e->orientation;
 	MyMatrix<float,4> MVP = perspective * MV;
 	MyMatrix<float,3> N = shrink(MV);
 	N.transpose();
 
 	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(defaultShader.GetModelviewMatrix(), 1, GL_TRUE, &MVP[0]);
-	glUniformMatrix3fv(defaultShader.GetNormalMatrix(), 1, GL_TRUE, &N[0]);
+	glUniformMatrix4fv(s->GetModelviewMatrix(), 1, GL_TRUE, &MVP[0]);
+	glUniformMatrix3fv(s->GetNormalMatrix(), 1, GL_TRUE, &N[0]);
 
-	glDrawElements(GL_TRIANGLES, 3*entity.model->num_polygons, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 3*e->model->num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
 

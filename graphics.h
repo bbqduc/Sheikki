@@ -19,11 +19,13 @@ class Shader
 		GLint textureLoc;
 
 		std::string vertex_shader_path, fragment_shader_path;
+		bool initialized;
 		virtual void bindAttributes()=0;
 		virtual void setUniformLocations()=0;
 	public:
-		Shader() {}
-		Shader(std::string& vp, std::string& fp) : vertex_shader_path(vp), fragment_shader_path(fp) {}
+		Shader() {initialized=false;}
+		Shader(const char* vp, const char* fp)
+			: id(0), MVPLoc(0), NLoc(0), vertex_shader_path(vp), fragment_shader_path(fp), initialized(false) {}
 		virtual ~Shader() {}
 		char* loadFile(const char*, GLint&); // This is for loading a shader for a file
 		void init();
@@ -32,15 +34,15 @@ class Shader
 			vertex_shader_path=vp;
 			fragment_shader_path=fp;
 		}
-		GLuint getId() const {return id;}
+		GLuint getId() const {assert(initialized); return id;}
 		static void printShaderInfoLog(GLint shader); // Prints information in case something goes wrong
 
-		GLint GetModelviewMatrix() const {return MVPLoc;}
-		GLint GetNormalMatrix() const {return NLoc;}
-		GLint GetTexture() const {return textureLoc;}
+		GLint GetModelviewMatrix() const {assert(initialized); return MVPLoc;}
+		GLint GetNormalMatrix() const {assert(initialized); return NLoc;}
+		GLint GetTexture() const {assert(initialized); return textureLoc;}
 };
 
-class DefaultShader : public Shader
+class SimpleShader : public Shader
 {
 	friend class Graphics;
 	private:
@@ -57,8 +59,8 @@ class DefaultShader : public Shader
 			textureLoc = glGetUniformLocation(id, "textures[0]");
 		}
 	public:
-		DefaultShader() : Shader() {}
-		DefaultShader(std::string& vp, std::string& fp) : Shader(vp,fp) {}
+		SimpleShader() : Shader() {}
+		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
 };
 
 class Graphics
@@ -68,16 +70,16 @@ class Graphics
 	FT_Uint charIndex;*/
 
 	MyMatrix<float, 4> perspective;
-	DefaultShader defaultShader;
+	SimpleShader defaultShader;
 
 	void initFonts();
 	void initGlew();
 	void initGL();
-	void draw(const Entity&);
+	void draw(const std::pair<Entity*, Shader*>& pair);
 
 	public:
 	Graphics();
-	void draw(const std::list<std::pair<Entity, GLuint> >&);
+	void draw(const std::list<std::pair<Entity*, Shader*> >& list);
 	
 	void reshape(int width, int height);
 };
