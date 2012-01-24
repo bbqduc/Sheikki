@@ -15,7 +15,7 @@
 
 	Graphics::Graphics()
 {
-	perspective = glm::perspective(45.0f, 800.0f/600.0f, 1.0f, 10.0f);
+	perspective = glm::perspective(45.0f, 800.0f/600.0f, 1.0f, 100.0f);
 	initGlew();
 	initGL();
 	defaultShader.init();

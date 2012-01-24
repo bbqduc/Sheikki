@@ -20,9 +20,10 @@ int main()
 	engine.addShader(&plain);
 	engine.addEntity(&plane_e, &dark);
 
-	plane_e.rotatePitch(3.14f/2);
-	plane_e.move(0,-3,5);
-	entity.rotatePitch(3.14f / 2);
+	plane_e.rotatePitch(90.0f);
+	plane_e.move(0,-3,0);
+
+	entity.rotatePitch(90.0f);
 	entity.move(0,0,5);
 	engine.setActive(&entity); // Sets entityInTheEngine to be the target of user input (for example movement)
 	engine.gameLoop();

@@ -97,21 +97,21 @@ void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 	if(entity == NULL)
 		return;
 	if(keysDown[UP])
-		entity->rotatePitch(0.05f*delta);
+		entity->rotatePitch(0.1f*delta);
 	if(keysDown[DOWN])
-		entity->rotatePitch(-0.05f*delta);
+		entity->rotatePitch(-0.1f*delta);
 	if(keysDown[Q])
-		entity->rotateRoll(-0.05f*delta);
+		entity->rotateRoll(-0.1f*delta);
 	if(keysDown[E])
-		entity->rotateRoll(0.05f*delta);
+		entity->rotateRoll(0.1f*delta);
 	if(keysDown[LEFT])
-		entity->rotateYaw(-0.05f*delta);
+		entity->rotateYaw(-0.1f*delta);
 	if(keysDown[RIGHT])
-		entity->rotateYaw(0.05f*delta);
+		entity->rotateYaw(0.1f*delta);
 	if(keysDown[A])
-		entity->thrusters(0.05f*delta);
+		entity->thrusters(0.005f*delta);
 	if(keysDown[Z])
-		entity->thrusters(-0.05f*delta);
+		entity->thrusters(-0.005f*delta);
 
 	static bool justonce=false;
 	if(keysDown[SPACE])
