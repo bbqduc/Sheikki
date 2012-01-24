@@ -2,7 +2,7 @@
 #define ENTITY_H
 
 #include "model.h"
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
