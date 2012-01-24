@@ -6,10 +6,10 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\matrix_inverse.hpp>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 

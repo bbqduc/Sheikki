@@ -6,7 +6,7 @@
 #include <string>
 #include <iosfwd>
 #include <stdint.h>
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 class Model
 {

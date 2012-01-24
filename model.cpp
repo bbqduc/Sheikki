@@ -1,7 +1,7 @@
 #include "model.h"
 #include "sheikki_wrappers.h"
 #include <iostream>
-#include <glm\gtc\type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 // Private constructor used by Model_3ds_loader
 Model::Model():
