@@ -233,16 +233,16 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 //	glm::mat4 Rx	= glm::rotate(T,  10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 //	glm::mat4 Ry	= glm::rotate(Rx, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 //	glm::mat4 MV	= glm::rotate(Ry, 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 MV = e->position;
+	glm::mat4 MV = e->position * e->orientation;
 	glm::mat4 MVP = perspective * MV;
 	glm::mat3 N(1.0f);
 	//glm::mat3 N(MV);
 	//N = glm::transpose(glm::inverse(N));
 
 	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(s->GetMVPMatrix(), 1, GL_TRUE, glm::value_ptr(MVP));
-	glUniformMatrix3fv(s->GetNMatrix(), 1, GL_TRUE, glm::value_ptr(N));
-	glUniformMatrix4fv(s->GetMVMatrix(), 1, GL_TRUE, glm::value_ptr(MV));
+	glUniformMatrix4fv(s->GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix3fv(s->GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
+	glUniformMatrix4fv(s->GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
 
 	glDrawElements(GL_TRIANGLES, 3*e->model->num_polygons, GL_UNSIGNED_INT, 0);
 
