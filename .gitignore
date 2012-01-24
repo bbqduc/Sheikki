@@ -1,0 +1,6 @@
+*.swp
+.depend
+*.o
+main
+tags
+glm/

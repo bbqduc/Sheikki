@@ -15,7 +15,7 @@ Engine::Engine(int width, int height, int depth)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpened()){
+	while(window.IsOpen()){
 		graphics.draw(objects);
 		window.Display();
 
