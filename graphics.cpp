@@ -1,5 +1,4 @@
 #include "graphics.h"
-#include "matrix_utils.h"
 #include "sheikki_wrappers.h"
 #include "machineinfo.h"
 #include <GL/glew.h>
@@ -7,14 +6,16 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\matrix_inverse.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
 	Graphics::Graphics()
-:perspective(projectionMatrix(45.0f, 800.0f/600.0f, 1, 10))
 {
-	perspective = perspective * translationMatrix(0,0,-8);
-
+	perspective = glm::perspective(45.0f, 800.0f/600.0f, 1.0f, 10.0f);
 	initGlew();
 	initGL();
 	defaultShader.init();
@@ -58,10 +59,12 @@ void Graphics::initGlew()
 
 void Graphics::initGL()
 {
-	glEnable(GL_DEPTH_TEST); // We enable the depth test (also called z buffer)
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
+    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)	
+
 }
 
 void checkGLErrors(std::string functionName){
@@ -214,7 +217,7 @@ void Shader::init()
 void Graphics::draw(const std::list<std::pair<Entity*, Shader*> >& objects)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for(std::list<std::pair<Entity*, Shader*> >::const_iterator i = objects.begin(); i != objects.end(); ++i)
+	for(auto i = objects.begin(); i != objects.end(); ++i)
 		draw(*i);
 }
 
@@ -226,14 +229,20 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 	sheikki_glBindVertexArray(e->model->VAO_id);
 	glUseProgram(s->getId());
 
-	MyMatrix<float,4> MV = e->position * e->orientation;
-	MyMatrix<float,4> MVP = perspective * MV;
-	MyMatrix<float,3> N = shrink(MV);
-	N.transpose();
+	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -20.0f));
+//	glm::mat4 Rx	= glm::rotate(T,  10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+//	glm::mat4 Ry	= glm::rotate(Rx, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+//	glm::mat4 MV	= glm::rotate(Ry, 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 MV = e->position;
+	glm::mat4 MVP = perspective * MV;
+	glm::mat3 N(1.0f);
+	//glm::mat3 N(MV);
+	//N = glm::transpose(glm::inverse(N));
 
 	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(s->GetModelviewMatrix(), 1, GL_TRUE, &MVP[0]);
-	glUniformMatrix3fv(s->GetNormalMatrix(), 1, GL_TRUE, &N[0]);
+	glUniformMatrix4fv(s->GetMVPMatrix(), 1, GL_TRUE, glm::value_ptr(MVP));
+	glUniformMatrix3fv(s->GetNMatrix(), 1, GL_TRUE, glm::value_ptr(N));
+	glUniformMatrix4fv(s->GetMVMatrix(), 1, GL_TRUE, glm::value_ptr(MV));
 
 	glDrawElements(GL_TRIANGLES, 3*e->model->num_polygons, GL_UNSIGNED_INT, 0);
 

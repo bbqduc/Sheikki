@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <GL/glew.h>
 #include <string>
-#include "vec.h"
 #include <iosfwd>
 #include <stdint.h>
+#include <glm\glm.hpp>
 
 class Model
 {
@@ -16,9 +16,10 @@ class Model
 	friend class Graphics;
 	friend class Model_Loader_3ds;
 	int num_vertices, num_polygons;
-	Vec<float, 3> *vertices, *normals;
-	Vec<float, 2> *texcoords;
-	Vec<GLuint, 3> *polygons;
+	glm::vec3* vertices, *normals;
+	glm::vec2* texcoords;
+	glm::uvec3* polygons;
+	
 	GLint drawMode;
 	GLuint texture;
 	sf::FloatRect texturecoords;
@@ -30,8 +31,8 @@ class Model
 	Model();
 
 	public:
-	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<GLuint, 3> *polygons, GLint drawMode = GL_TRIANGLES);
-	Model(int num_vertices, int num_polygons, Vec<float, 3> *vertices, Vec<GLuint, 3> *polygons, Vec<float, 2> *texcoords, GLint drawMode, std::string texturepath);
+		Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, GLint drawMode = GL_TRIANGLES);
+		Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, glm::vec2 *texcoords, GLint drawMode, std::string texturepath);
 	~Model();
 	GLuint GetTexture() const;
 };

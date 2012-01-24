@@ -15,7 +15,7 @@ class Shader
 {
 	protected:
 		GLuint id;
-		GLint MVPLoc, NLoc;
+		GLint MVPLoc, NLoc, MVLoc;
 		GLint textureLoc;
 
 		std::string vertex_shader_path, fragment_shader_path;
@@ -33,8 +33,9 @@ class Shader
 		GLuint getId() const {assert(initialized); return id;}
 		static void printShaderInfoLog(GLint shader); // Prints information in case something goes wrong
 
-		GLint GetModelviewMatrix() const {assert(initialized); return MVPLoc;}
-		GLint GetNormalMatrix() const {assert(initialized); return NLoc;}
+		GLint GetMVPMatrix() const {assert(initialized); return MVPLoc;}
+		GLint GetMVMatrix() const {assert(initialized); return MVLoc;}
+		GLint GetNMatrix() const {assert(initialized); return NLoc;}
 		GLint GetTexture() const {assert(initialized); return textureLoc;}
 };
 
@@ -52,6 +53,7 @@ class SimpleShader : public Shader
 		{
 			MVPLoc = glGetUniformLocation(id, "MVP");
 			NLoc = glGetUniformLocation(id, "N");
+			MVLoc = glGetUniformLocation(id, "MV");
 			textureLoc = glGetUniformLocation(id, "textures[0]");
 		}
 	public:
@@ -65,7 +67,7 @@ class Graphics
 	FT_Face fontInfo;
 	FT_Uint charIndex;*/
 
-	MyMatrix<float, 4> perspective;
+	glm::mat4 perspective;
 	SimpleShader defaultShader;
 
 	void initFonts();

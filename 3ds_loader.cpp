@@ -3,7 +3,6 @@
 #include <cassert>
 #include <stdint.h>
 #include <string>
-#include "vec.h"
 #include "model.h"
 #include "3ds_loader.h"
 
@@ -61,7 +60,7 @@ uint16_t Model_Loader_3ds::read_vertices(std::istream& infile, Model& model)
 	assert(infile);
 	infile.read((char*)&model.num_vertices, 2);
 
-	model.vertices = new Vec<float, 3>[model.num_vertices];
+	model.vertices = new glm::vec3[model.num_vertices];
 	for(uint16_t i = 0; i < model.num_vertices; ++i)
 		for(int j = 0; j < 3; ++j)
 			infile.read((char*)&model.vertices[i][j], sizeof(float));
@@ -74,7 +73,7 @@ uint16_t Model_Loader_3ds::read_polygons(std::istream& infile, Model& model)
 	assert(infile);
 	infile.read((char*)&model.num_polygons, 2);
 
-	model.polygons = new Vec<GLuint, 3>[model.num_polygons];
+	model.polygons = new glm::uvec3[model.num_polygons];
 	uint16_t face_flags; // We ignore these
 	for(uint16_t i = 0; i < model.num_polygons; ++i)
 	{
@@ -95,7 +94,7 @@ uint16_t Model_Loader_3ds::read_texcoords(std::istream& infile, Model& model)
 	uint16_t num_texcoords;
 	infile.read((char*)&num_texcoords, sizeof(uint16_t));
 
-	model.texcoords = new Vec<float, 2>[num_texcoords];
+	model.texcoords = new glm::vec2[num_texcoords];
 	for(uint16_t i = 0; i < model.num_vertices; ++i)
 		for(int j = 0; j < 2; ++j)
 			infile.read((char*)&model.texcoords[i][j], sizeof(float));

@@ -1,11 +1,11 @@
 #include "entity.h"
 #include <iostream>
-#include "matrix_utils.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 Entity::Entity(Model* model_)
 	: model(model_),
-	position(),
-	orientation(),
+	position(1.0f),
+	orientation(1.0f),
 	velocity(0)
 {
 	movement_direction[0] = 0;
@@ -15,50 +15,72 @@ Entity::Entity(Model* model_)
 
 void Entity::setPos(float x, float y, float z)
 {
-	position[3] = x;
-	position[7] = y;
-	position[11] = z;
+	position[3][0] = x;
+	position[3][1] = y;
+	position[3][2] = z;
 }
 
 void Entity::rotateYaw(float yaw)
 {
-	MyMatrix<float, 4> rotation = rotationMatrix(yaw, orientation[1], orientation[5], orientation[9]);
+	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(orientation[1]));
 	orientation = rotation * orientation;
+	this->yaw += yaw;
 }
 	
 void Entity::rotatePitch(float pitch)
 {
-	MyMatrix<float, 4> rotation = rotationMatrix(pitch, orientation[0], orientation[4], orientation[8]);
+	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), pitch, glm::vec3(orientation[0]));
 	orientation = rotation * orientation;
+	this->pitch += pitch;
 }
 
 void Entity::rotateRoll(float roll)
 {
-	MyMatrix<float, 4> rotation = rotationMatrix(roll, orientation[2], orientation[6], orientation[10]);
+	glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), roll, glm::vec3(orientation[2]));
 	orientation = rotation * orientation;
+	this->roll += roll;
 }
 
 void Entity::move(float x, float y, float z)
 {
-	position[3] += x;
-	position[7] += y;
-	position[11] += z;
+	position[3][0] += x;
+	position[3][1] += y;
+	position[3][2] += z;
+	this->x += x;
+	this->y += y;
+	this->z += z;
 }
 
 void Entity::thrusters(float force)
 {
-	position[3] += (orientation[2] * force);
-	position[7] += (orientation[6] * force);
-	position[11] += (orientation[10] * force);
-
-//	std::cerr << "Moving in direction " << orientation[2] << ' ' << orientation[6] << ' ' << orientation[10] << '\n';
+	glm::mat4 asd = glm::translate(position, glm::vec3(orientation[2])*force);
+	position[3] += (orientation[2]*force);
+		
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+			std::cout << position[j][i] << " ";
+		std::cout << "\n";
+	}
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+			std::cout << asd[j][i] << " ";
+		std::cout << "\n";
+	}
+	/*for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+			std::cout << orientation[j][i] << " ";
+		std::cout << "\n";
+	}*/
 }
 
 void Entity::tick()
 {
-	position[3] += (movement_direction[0] * velocity); // x
-	position[7] += (movement_direction[1] * velocity); // y
-	position[11] += (movement_direction[2] * velocity); // z
+	position[3][0] += (movement_direction[0] * velocity); // x
+	position[3][1] += (movement_direction[1] * velocity); // y
+	position[3][2] += (movement_direction[2] * velocity); // z
 }
 
 GLuint Entity::GetTexture() const

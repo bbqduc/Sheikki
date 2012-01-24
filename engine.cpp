@@ -21,7 +21,7 @@ void Engine::gameLoop()
 
 		processEvents();
 		applyInput(activeEntity, window.GetFrameTime());
-		sf::Sleep(0.01);
+		sf::Sleep(1);
 	}
 }
 
@@ -142,7 +142,7 @@ void Engine::addEntity(Entity* entity, Shader* shader)
 void Engine::renderWithShader(Entity* entity, Shader* shader)
 {
 	bool success=false;
-	for(std::list<std::pair<Entity*, Shader*> >::iterator it=objects.begin(); it!=objects.end(); ++it)
+	for(auto it=objects.begin(); it!=objects.end(); ++it)
 	{
 		if(it->first==entity)
 		{
@@ -158,7 +158,7 @@ Shader* Engine::getShader(Entity* entity) const
 {
 	bool success=false;
 	Shader* ret=NULL;
-	for(std::list<std::pair<Entity*, Shader*> >::const_iterator it=objects.begin(); it!=objects.end(); ++it)
+	for(auto it=objects.begin(); it!=objects.end(); ++it)
 	{
 		if(it->first==entity)
 		{

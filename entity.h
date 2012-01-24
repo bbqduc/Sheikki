@@ -2,16 +2,16 @@
 #define ENTITY_H
 
 #include "model.h"
-#include "mymatrix.h"
-#include "vec.h"
+#include <glm\glm.hpp>
 
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
 	Model* model;
-	MyMatrix<float, 4> position,
-		 orientation; // Save position and orientation as matrices for efficiency
+	glm::mat4 position, orientation;
 	float velocity;
-	Vec<float, 3> movement_direction;
+	glm::vec3 movement_direction;
+
+	float x,y,z,yaw,pitch,roll;
 
 	public:
 	Entity(Model*);
