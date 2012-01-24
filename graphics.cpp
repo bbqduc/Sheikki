@@ -229,11 +229,11 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 	sheikki_glBindVertexArray(e->model->VAO_id);
 	glUseProgram(s->getId());
 
-	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -20.0f));
+	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 //	glm::mat4 Rx	= glm::rotate(T,  10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 //	glm::mat4 Ry	= glm::rotate(Rx, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 //	glm::mat4 MV	= glm::rotate(Ry, 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 MV = e->position * e->orientation;
+	glm::mat4 MV = T * e->position * e->orientation;
 	glm::mat4 MVP = perspective * MV;
 	glm::mat3 N(1.0f);
 	//glm::mat3 N(MV);

@@ -15,7 +15,7 @@ Engine::Engine(int width, int height, int depth)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpen()){
+	while(window.IsOpened()){
 		graphics.draw(objects);
 		window.Display();
 
@@ -97,21 +97,21 @@ void Engine::applyInput(Entity* entity, sf::Uint32 delta)
 	if(entity == NULL)
 		return;
 	if(keysDown[UP])
-		entity->rotatePitch(0.005f*delta);
+		entity->rotatePitch(0.05f*delta);
 	if(keysDown[DOWN])
-		entity->rotatePitch(-0.005f*delta);
+		entity->rotatePitch(-0.05f*delta);
 	if(keysDown[Q])
-		entity->rotateRoll(-0.005f*delta);
+		entity->rotateRoll(-0.05f*delta);
 	if(keysDown[E])
-		entity->rotateRoll(0.005f*delta);
+		entity->rotateRoll(0.05f*delta);
 	if(keysDown[LEFT])
-		entity->rotateYaw(-0.005f*delta);
+		entity->rotateYaw(-0.05f*delta);
 	if(keysDown[RIGHT])
-		entity->rotateYaw(0.005f*delta);
+		entity->rotateYaw(0.05f*delta);
 	if(keysDown[A])
-		entity->thrusters(0.005f*delta);
+		entity->thrusters(0.05f*delta);
 	if(keysDown[Z])
-		entity->thrusters(-0.005f*delta);
+		entity->thrusters(-0.05f*delta);
 
 	static bool justonce=false;
 	if(keysDown[SPACE])
