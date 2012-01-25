@@ -11,7 +11,8 @@ void Tank::fire(Engine& engine)
 	proj->setPos(position[3][0], position[3][1], position[3][2]);
 	proj->rotate(orientation);
 	proj->setVelocity(0.1f);
-	proj->setDirection(glm::vec3(orientation[1]));
+	glm::vec3 dir=glm::vec3(orientation[1]);
+	proj->setDirection(dir);
 
 	engine.addProjectile(proj);
 }
