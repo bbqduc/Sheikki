@@ -6,7 +6,7 @@
 
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
-	Model* model;
+	const Model& model;
 	glm::mat4 position, orientation;
 	float velocity;
 	glm::vec3 movement_direction;
@@ -14,7 +14,7 @@ class Entity{
 	float x,y,z,yaw,pitch,roll;
 
 	public:
-	Entity(Model*);
+	Entity(const Model&);
 	void setPos(float,float,float);
 	void move(float,float,float);
 	void thrusters(float);

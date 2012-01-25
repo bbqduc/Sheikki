@@ -2,7 +2,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
-Entity::Entity(Model* model_)
+Entity::Entity(const Model& model_)
 	: model(model_),
 	position(	1.0f),
 	orientation(1.0f),
@@ -66,5 +66,5 @@ void Entity::tick()
 
 GLuint Entity::GetTexture() const
 {
-	return model->GetTexture();
+	return model.GetTexture();
 }

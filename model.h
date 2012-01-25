@@ -15,6 +15,8 @@ class Model
 
 	friend class Graphics;
 	friend class Model_Loader_3ds;
+	friend class std::map<std::string, Model>;
+
 	int num_vertices, num_polygons;
 	glm::vec3* vertices, *normals;
 	glm::vec2* texcoords;
@@ -28,11 +30,12 @@ class Model
 	void calculate_normals();
 	void InitVBOs();
 	void Init_Texture(const std::string& texturepath);
-	Model();
 
+	Model();
 	public:
-		Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, GLint drawMode = GL_TRIANGLES);
-		Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, glm::vec2 *texcoords, GLint drawMode, std::string texturepath);
+	Model(const Model&);
+	Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, GLint drawMode = GL_TRIANGLES);
+	Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, glm::vec2 *texcoords, GLint drawMode, std::string texturepath);
 	~Model();
 	GLuint GetTexture() const;
 };

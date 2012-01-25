@@ -15,7 +15,7 @@ Engine::Engine(int width, int height, int depth)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpen()){
+	while(window.IsOpened()){
 		graphics.draw(objects);
 		window.Display();
 
@@ -174,5 +174,15 @@ Shader* Engine::getShader(Entity* entity) const
 void Engine::setActive(Entity* entity)
 {
 	activeEntity = entity;
+}
+
+void Engine::addModel(std::string id, Model& model)
+{
+	graphics.addModel(id, model);
+}
+
+const Model& Engine::getModel(std::string id)
+{
+	return graphics.getModel(id);
 }
 

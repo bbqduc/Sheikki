@@ -54,7 +54,7 @@ void Graphics::initGlew()
 	{
 		std::cerr << "Using version 120 shaders!\n";
 	}
-	defaultShader.setShaderPaths("minimal.vert", "minimal.frag");
+	defaultShader.setShaderPaths("minimal.vert", "plain.frag");
 }
 
 void Graphics::initGL()
@@ -226,7 +226,7 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 	Entity* e=pair.first;
 	Shader* s=pair.second;
 	if(!s) s=&defaultShader;
-	sheikki_glBindVertexArray(e->model->VAO_id);
+	sheikki_glBindVertexArray(e->model.VAO_id);
 	glUseProgram(s->getId());
 
 	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
@@ -243,10 +243,19 @@ void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
 	glUniformMatrix3fv(s->GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
 	glUniformMatrix4fv(s->GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
 
-	glDrawElements(GL_TRIANGLES, 3*e->model->num_polygons, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 3*e->model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
 
 	checkGLErrors("display");
 }
 
+void Graphics::addModel(std::string id, Model& model)
+{
+	models[id] = model;
+}
+
+const Model& Graphics::getModel(std::string id)
+{
+	return models[id];
+}

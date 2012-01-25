@@ -66,6 +66,7 @@ class Graphics
 /*	FT_Libary fontLibrary;
 	FT_Face fontInfo;
 	FT_Uint charIndex;*/
+	std::map<std::string, Model> models;
 
 	glm::mat4 perspective;
 	SimpleShader defaultShader;
@@ -77,6 +78,8 @@ class Graphics
 
 	public:
 	Graphics();
+	void addModel(std::string id, Model& model);
+	const Model& getModel(std::string id);
 	void draw(const std::list<std::pair<Entity*, Shader*> >& list);
 	
 	void reshape(int width, int height);

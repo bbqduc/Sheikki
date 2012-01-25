@@ -5,15 +5,47 @@
 
 // Private constructor used by Model_3ds_loader
 Model::Model():
-	num_vertices(0),
+num_vertices(0),
 	num_polygons(0),
 	vertices(NULL),
 	texcoords(NULL),
-	polygons(NULL)
+	polygons(NULL),
+	normals(NULL)
 {}
 
+Model::Model(const Model& model):
+name(model.name),
+	num_vertices(model.num_vertices),
+	num_polygons(model.num_polygons),
+	vertices(new glm::vec3[num_vertices]),
+	polygons(new glm::uvec3[num_polygons]),
+	texcoords(NULL),
+	normals(new glm::vec3[num_vertices]),
+	drawMode(model.drawMode),
+	texture(model.texture),
+	texturecoords(model.texturecoords),
+	VBO_vertices_id(model.VBO_vertices_id),
+	VBO_normals_id(model.VBO_normals_id),
+	VBO_indices_id(model.VBO_indices_id),
+	VBO_color_id(model.VBO_color_id),
+	VBO_texcoord_id(model.VBO_texcoord_id),
+	VAO_id(model.VAO_id)
+{
+	if(model.texcoords)
+		texcoords = new glm::vec2[num_vertices];
+	for(size_t i = 0; i < num_polygons; ++i)
+		polygons[i] = model.polygons[i];
+	for(size_t i = 0; i < num_vertices; ++i)
+	{
+		vertices[i] = model.vertices[i];
+		normals[i] = model.normals[i];
+		if(texcoords)
+			texcoords[i] = model.texcoords[i];
+	}
+}
+
 Model::Model(int num_vertices_, int num_polygons_, glm::vec3* vertices_, glm::uvec3* polygons_, GLint drawMode_) :
-	num_vertices(num_vertices_),
+num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new glm::vec3[num_vertices_]),
 	texcoords(NULL),
@@ -29,7 +61,7 @@ Model::Model(int num_vertices_, int num_polygons_, glm::vec3* vertices_, glm::uv
 }
 
 Model::Model(int num_vertices_, int num_polygons_, glm::vec3* vertices_, glm::uvec3* polygons_, glm::vec2* texcoords_, GLint drawMode_, std::string texturepath) :
-	num_vertices(num_vertices_),
+num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new glm::vec3[num_vertices_]),
 	texcoords(new glm::vec2[num_vertices_]),
@@ -83,7 +115,7 @@ void Model::Init_Texture(const std::string& texturepath)
 	tmp.LoadFromFile(texturepath);
 
 	const sf::Uint8* texturedata = tmp.GetPixelsPtr();
-  	
+
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -138,9 +170,9 @@ void Model::InitVBOs()
 
 	/*for(int i = 0; i < num_vertices; ++i)
 	{
-		for(int j = 0; j < 3; ++j)
-			std::cout << vertices[i][j] << " ";
-		std::cout << '\n';
+	for(int j = 0; j < 3; ++j)
+	std::cout << vertices[i][j] << " ";
+	std::cout << '\n';
 	}*/
 }
 
@@ -152,4 +184,6 @@ GLuint Model::GetTexture() const
 Model::~Model()
 {
 	delete[] vertices;
+	delete[] normals;
+	delete[] polygons;
 }

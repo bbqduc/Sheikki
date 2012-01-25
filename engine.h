@@ -25,6 +25,8 @@ class Engine
 
 	public:
 		Engine(int width = 800, int height = 600, int depth = 32);
+		void addModel(std::string id, Model& model);
+		const Model& getModel(std::string id);
 		void addEntity(Entity* entity, Shader* shader=NULL);
 		void addShader(Shader* shader) {unused_shaders.push_back(shader);}
 		void renderWithShader(Entity* entity, Shader* shader);
