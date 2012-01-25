@@ -7,10 +7,15 @@ int main()
 {
 
 	Engine engine;
-	engine.addModel("tank", Model_Loader_3ds::read_model("tank.3ds"));
-	engine.addModel("plane", Model_Loader_3ds::read_model("plane.3ds"));
-	engine.addModel("bullet", Model_Loader_3ds::read_model("bullet.3ds"));
-	
+	{
+		Model tank = Model_Loader_3ds::read_model("tank.3ds"),
+			plane = Model_Loader_3ds::read_model("plane.3ds"),
+			bullet = Model_Loader_3ds::read_model("bullet.3ds");
+		engine.addModel("tank", tank);
+		engine.addModel("plane", plane);
+		engine.addModel("bullet", bullet);
+	}
+
 	Entity entity = Entity(engine.getModel("tank"));
 	Entity plane_e = Entity(engine.getModel("plane"));
 
