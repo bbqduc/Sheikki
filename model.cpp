@@ -136,12 +136,12 @@ void Model::InitVBOs()
 
 	sheikki_glBindVertexArray(0);
 
-	for(int i = 0; i < num_vertices; ++i)
+	/*for(int i = 0; i < num_vertices; ++i)
 	{
 		for(int j = 0; j < 3; ++j)
 			std::cout << vertices[i][j] << " ";
 		std::cout << '\n';
-	}
+	}*/
 }
 
 GLuint Model::GetTexture() const

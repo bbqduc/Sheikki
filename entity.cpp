@@ -4,7 +4,7 @@
 
 Entity::Entity(Model* model_)
 	: model(model_),
-	position(1.0f),
+	position(	1.0f),
 	orientation(1.0f),
 	velocity(0)
 {
@@ -53,28 +53,9 @@ void Entity::move(float x, float y, float z)
 
 void Entity::thrusters(float force)
 {
-	glm::mat4 asd = glm::translate(position, glm::vec3(orientation[2])*force);
-	position[3] += (orientation[2]*force);
-		
-	for(int i = 0; i < 4; ++i)
-	{
-		for(int j = 0; j < 4; ++j)
-			std::cout << position[j][i] << " ";
-		std::cout << "\n";
-	}
-	for(int i = 0; i < 4; ++i)
-	{
-		for(int j = 0; j < 4; ++j)
-			std::cout << asd[j][i] << " ";
-		std::cout << "\n";
-	}
-	/*for(int i = 0; i < 4; ++i)
-	{
-		for(int j = 0; j < 4; ++j)
-			std::cout << orientation[j][i] << " ";
-		std::cout << "\n";
-	}*/
-}
+	position[3] += (orientation[1]*force);
+}		
+
 
 void Entity::tick()
 {
