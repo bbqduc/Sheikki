@@ -177,25 +177,6 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 	assert(model.polygons);
 	assert(model.vertices);
 
-/*	std::cout << "Vertices:\n";
-	for(int i = 0; i < model.num_vertices; ++i)
-	{
-		std::cout << '(' << model.vertices[i][0];
-		for(int j = 1; j < 3; ++j)
-			std::cout << ',' << model.vertices[i][j];
-		std::cout << ")\n";
-	}
-	
-	std::cout << "\nPolygons:\n";
-	for(int i = 0; i < model.num_polygons; ++i)
-	{
-		std::cout << '(' << model.polygons[i][0];
-		for(int j = 1; j < 3; ++j)
-			std::cout << ',' << model.polygons[i][j];
-		std::cout << ")\n";
-	}
-*/
-
 	std::cout << "Texture coordinates ... ";
 	if(model.texcoords)
 	{
