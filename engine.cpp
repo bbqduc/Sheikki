@@ -21,9 +21,8 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpen()){
+	while(window.IsOpened()){
 		graphics.clearBuffers();
-		processEvents();
 		for(auto i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->tick();
@@ -50,6 +49,7 @@ void Engine::gameLoop()
 			activeTank->tick(keysDown, *this);
 		sf::Sleep(1);
 		window.Display();
+		processEvents();
 	}
 }
 
