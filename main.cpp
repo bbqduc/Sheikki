@@ -8,7 +8,7 @@ int main()
 
 	Engine engine;
 
-	Model model = Model_Loader_3ds::read_model("test.3ds");
+	Model model = Model_Loader_3ds::read_model("tank.3ds");
 	Model plane = Model_Loader_3ds::read_model("plane.3ds");
 	Entity entity = Entity(&model);
 	Entity plane_e = Entity(&plane);
