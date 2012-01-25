@@ -4,8 +4,8 @@
 
 uniform sampler2D textures[1];
 varying vec2 texcoord;
-smooth varying vec3 vVaryingLightDir;
-smooth varying vec3 vVaryingNormal;
+varying vec3 vVaryingLightDir;
+varying vec3 vVaryingNormal;
 
 void main(void)
 {
@@ -13,8 +13,8 @@ void main(void)
 	vec4 diffuseColor = vec4(1.0f,1.0f,1.0f,0.0f);
 	vec4 specularColor = vec4(0.2f,0.2f,0.2f,1.0f);
 	float diff = max(0.0, dot(normalize(vVaryingNormal), normalize(vVaryingLightDir)));
-	vFragColor = diff * diffuseColor;
-	vFragColor += ambientColor;
+	gl_FragColor = diff * diffuseColor;
+	gl_FragColor += ambientColor;
 	vec3 vReflection = normalize(reflect(-normalize(vVaryingLightDir),normalize(vVaryingNormal)));
 	float spec = max(0.0, dot(normalize(vVaryingNormal), vReflection));
 
@@ -22,5 +22,5 @@ void main(void)
 		float fSpec = pow(spec, 32.0);
 		gl_FragColor.rgb += vec3(fSpec, fSpec, fSpec);
 	}
-	gl_FragColor *= texture2D(textures[0], texcoord);
+//	gl_FragColor *= texture2D(textures[0], texcoord);
 }

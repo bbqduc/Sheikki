@@ -22,7 +22,7 @@ void main(void) {
 		float fSpec = pow(spec, 32.0);
 		vFragColor.rgb += vec3(fSpec, fSpec, fSpec);
 	}
-	vFragColor *= texture2D(textures[0], texcoord);
+//	vFragColor *= texture2D(textures[0], texcoord);
 	vFragColor -= vec4(0.3f,0.3f,0.3f,0.3f);
 
 }
