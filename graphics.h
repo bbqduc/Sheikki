@@ -74,15 +74,16 @@ class Graphics
 	void initFonts();
 	void initGlew();
 	void initGL();
-	void draw(const std::pair<Entity*, Shader*>& pair);
 
 	public:
 	Graphics();
 	void addModel(std::string id, Model& model);
 	const Model& getModel(std::string id);
-	void draw(const std::list<std::pair<Entity*, Shader*> >& list);
-	
+
 	void reshape(int width, int height);
+	void clearBuffers();
+	void draw(const Entity*);
+
 };
 
 #endif

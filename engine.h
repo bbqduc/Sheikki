@@ -3,35 +3,46 @@
 
 #include "graphics.h"
 #include "entity.h"
+#include "tank.h"
+#include "projectile.h"
 #include <SFML/Window.hpp>
 #include <list>
 
 class Engine
 {
 	private:
-		static enum {UP, DOWN, LEFT, RIGHT, A, Z, Q, E, SPACE} keys; 
 		static const unsigned int KEYS=9;
 		bool keysDown[KEYS];
 		sf::Window window;	
 		Graphics graphics;
 		std::vector<Shader*> unused_shaders;
 		std::vector<Shader*> shader_storage; // Just for demo purposes.
-		std::list<std::pair<Entity*, Shader*> > objects;
-		Entity* activeEntity; // This is the object being controlled by user input
+
+		std::list<Entity*> objects;
+		std::list<Tank*> tanks;
+		std::list<Projectile*> projectiles;
+
+		Tank* activeTank; // This is the object being controlled by user input
 
 		void processEvents();
 		void handleKeyPress(sf::Event& e);
 		void applyInput(Entity* entity, sf::Uint32 delta);
 
 	public:
+		static enum {UP, DOWN, LEFT, RIGHT, A, Z, Q, E, SPACE} keys; 
+
 		Engine(int width = 800, int height = 600, int depth = 32);
 		void addModel(std::string id, Model& model);
 		const Model& getModel(std::string id);
-		void addEntity(Entity* entity, Shader* shader=NULL);
+
+		void addObject(Entity* entity, Shader* shader=NULL);
+		void addTank(Tank* tank, Shader* shader=NULL);
+		void addProjectile(Projectile* projectile, Shader* shader=NULL);
+
 		void addShader(Shader* shader) {unused_shaders.push_back(shader);}
 		void renderWithShader(Entity* entity, Shader* shader);
 		Shader* getShader(Entity* entity) const;
-		void setActive(Entity* entity);
+		void setActive(Tank* tank);
 
 		void gameLoop();
 };

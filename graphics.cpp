@@ -214,17 +214,14 @@ void Shader::init()
 	initialized=true;
 }
 
-void Graphics::draw(const std::list<std::pair<Entity*, Shader*> >& objects)
+void Graphics::clearBuffers()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	for(auto i = objects.begin(); i != objects.end(); ++i)
-		draw(*i);
 }
 
-void Graphics::draw(const std::pair<Entity*, Shader*>& pair)
+void Graphics::draw(const Entity* e)
 {
-	Entity* e=pair.first;
-	Shader* s=pair.second;
+	Shader* s = e->activeShader;
 	if(!s) s=&defaultShader;
 	sheikki_glBindVertexArray(e->model.VAO_id);
 	glUseProgram(s->getId());

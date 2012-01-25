@@ -2,6 +2,7 @@
 #include "model.h"
 #include "entity.h"
 #include "3ds_loader.h"
+#include "tank.h"
 
 int main()
 {
@@ -16,15 +17,15 @@ int main()
 		engine.addModel("bullet", bullet);
 	}
 
-	Entity entity = Entity(engine.getModel("tank"));
+	Tank entity = Tank(engine.getModel("tank"));
 	Entity plane_e = Entity(engine.getModel("plane"));
 
-	engine.addEntity(&entity);
+	engine.addTank(&entity);
 
 	SimpleShader dark("minimal.vert","dark.frag");
 	SimpleShader plain("minimal.vert","plain.frag");
 	engine.addShader(&plain);
-	engine.addEntity(&plane_e, &dark);
+	engine.addObject(&plane_e, &dark);
 
 	plane_e.rotatePitch(90.0f);
 	plane_e.move(0,-3,0);

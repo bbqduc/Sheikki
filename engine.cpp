@@ -16,12 +16,34 @@ void Engine::gameLoop()
 {
 	window.SetActive();
 	while(window.IsOpened()){
-		graphics.draw(objects);
-		window.Display();
-
+		graphics.clearBuffers();
 		processEvents();
-		applyInput(activeEntity, window.GetFrameTime());
+		for(auto i = objects.begin(); i != objects.end(); ++i)
+		{
+			(*i)->tick();
+			graphics.draw(*i);
+		}
+		for(auto i = tanks.begin(); i != tanks.end(); ++i)
+		{
+			(*i)->tick();
+			graphics.draw(*i);
+		}
+			
+		for(auto i = projectiles.begin(); i != projectiles.end();)
+		{
+			(*i)->tick();
+			graphics.draw(*i);
+			if((*i)->getTTL() < 0.0f)
+			{
+				auto j = i; ++i; projectiles.erase(j);
+			}
+			else ++i;
+		}
+
+		if(activeTank)
+			activeTank->tick(keysDown, *this);
 		sf::Sleep(1);
+		window.Display();
 	}
 }
 
@@ -92,51 +114,22 @@ void Engine::handleKeyPress(sf::Event& event)
 	}
 }
 
-void Engine::applyInput(Entity* entity, sf::Uint32 delta)
+void Engine::addObject(Entity* entity, Shader* shader)
 {
-	if(entity == NULL)
-		return;
-	if(keysDown[UP])
-		entity->rotatePitch(0.1f*delta);
-	if(keysDown[DOWN])
-		entity->rotatePitch(-0.1f*delta);
-	if(keysDown[Q])
-		entity->rotateRoll(-0.1f*delta);
-	if(keysDown[E])
-		entity->rotateRoll(0.1f*delta);
-	if(keysDown[LEFT])
-		entity->rotateYaw(-0.1f*delta);
-	if(keysDown[RIGHT])
-		entity->rotateYaw(0.1f*delta);
-	if(keysDown[A])
-		entity->thrusters(0.005f*delta);
-	if(keysDown[Z])
-		entity->thrusters(-0.005f*delta);
-
-	static bool justonce=false;
-	if(keysDown[SPACE])
-	{
-		if(!justonce)
-		{
-			Shader* s=getShader(activeEntity);
-			if(s!=unused_shaders.back())
-			{
-				if(shader_storage.size()==0) shader_storage.push_back(s);
-				renderWithShader(activeEntity, unused_shaders.back());
-			}
-			else
-			{
-				renderWithShader(activeEntity, shader_storage.back());
-			}
-			justonce=true;
-		}
-	}
-	else justonce=false;
+	objects.push_back(entity);
+	entity->activeShader = shader;
 }
 
-void Engine::addEntity(Entity* entity, Shader* shader)
+void Engine::addTank(Tank* tank, Shader* shader)
 {
-	objects.push_back(std::make_pair(entity,shader));
+	tanks.push_back(tank);
+	tank->activeShader = shader;
+}
+
+void Engine::addProjectile(Projectile* projectile, Shader* shader)
+{
+	projectiles.push_back(projectile);
+	projectile->activeShader = shader;
 }
 
 void Engine::renderWithShader(Entity* entity, Shader* shader)
@@ -144,9 +137,9 @@ void Engine::renderWithShader(Entity* entity, Shader* shader)
 	bool success=false;
 	for(auto it=objects.begin(); it!=objects.end(); ++it)
 	{
-		if(it->first==entity)
+		if(*it == entity)
 		{
-			it->second=shader;
+			(*it)->activeShader = shader;
 			success=true;
 			break;
 		}
@@ -160,9 +153,9 @@ Shader* Engine::getShader(Entity* entity) const
 	Shader* ret=NULL;
 	for(auto it=objects.begin(); it!=objects.end(); ++it)
 	{
-		if(it->first==entity)
+		if(*it==entity)
 		{
-			ret=it->second;
+			ret=(*it)->activeShader;
 			success=true;
 			break;
 		}
@@ -171,9 +164,9 @@ Shader* Engine::getShader(Entity* entity) const
 	return ret;
 }
 
-void Engine::setActive(Entity* entity)
+void Engine::setActive(Tank* tank)
 {
-	activeEntity = entity;
+	activeTank = tank;
 }
 
 void Engine::addModel(std::string id, Model& model)

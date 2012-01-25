@@ -1,9 +1,12 @@
 #include "entity.h"
+#include "engine.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
 Entity::Entity(const Model& model_)
-	: model(model_),
+	: 
+	activeShader(NULL),
+	model(model_),
 	position(	1.0f),
 	orientation(1.0f),
 	velocity(0)
@@ -18,6 +21,21 @@ void Entity::setPos(float x, float y, float z)
 	position[3][0] = x;
 	position[3][1] = y;
 	position[3][2] = z;
+}
+
+void Entity::setVelocity(float velocity)
+{
+	this->velocity = velocity;
+}
+
+void Entity::rotate(glm::mat4& mat)
+{
+	orientation = mat * orientation;
+}
+
+void Entity::setDirection(glm::vec3& dir)
+{
+	movement_direction = dir;
 }
 
 void Entity::rotateYaw(float yaw)
@@ -62,6 +80,26 @@ void Entity::tick()
 	position[3][0] += (movement_direction[0] * velocity); // x
 	position[3][1] += (movement_direction[1] * velocity); // y
 	position[3][2] += (movement_direction[2] * velocity); // z
+}
+
+void Entity::tick(bool keysDown[])
+{
+	if(keysDown[Engine::UP])
+		rotatePitch(0.1f);
+	if(keysDown[Engine::DOWN])
+		rotatePitch(-0.1f);
+	if(keysDown[Engine::Q])
+		rotateRoll(-0.1f);
+	if(keysDown[Engine::E])
+		rotateRoll(0.1f);
+	if(keysDown[Engine::LEFT])
+		rotateYaw(-0.1f);
+	if(keysDown[Engine::RIGHT])
+		rotateYaw(0.1f);
+	if(keysDown[Engine::A])
+		thrusters(0.005f);
+	if(keysDown[Engine::Z])
+		thrusters(-0.005f);
 }
 
 GLuint Entity::GetTexture() const
