@@ -12,6 +12,12 @@ Engine::Engine(int width, int height, int depth)
 	}
 }
 
+void Engine::removeProjectile(std::list<Projectile*>::iterator j)
+{
+	delete[] *j;
+	projectiles.erase(j);
+}
+
 void Engine::gameLoop()
 {
 	window.SetActive();
@@ -35,7 +41,7 @@ void Engine::gameLoop()
 			graphics.draw(*i);
 			if((*i)->getTTL() < 0.0f)
 			{
-				auto j = i; ++i; projectiles.erase(j);
+				auto j = i; ++i; removeProjectile(j);
 			}
 			else ++i;
 		}

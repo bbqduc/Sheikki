@@ -38,6 +38,8 @@ class Engine
 		void addObject(Entity* entity, Shader* shader=NULL);
 		void addTank(Tank* tank, Shader* shader=NULL);
 		void addProjectile(Projectile* projectile, Shader* shader=NULL);
+		void removeProjectile(std::list<Projectile*>::iterator j);
+
 
 		void addShader(Shader* shader) {unused_shaders.push_back(shader);}
 		void renderWithShader(Entity* entity, Shader* shader);
