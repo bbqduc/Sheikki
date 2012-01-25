@@ -23,7 +23,6 @@ int main()
 	plane_e.rotatePitch(90.0f);
 	plane_e.move(0,-3,0);
 
-	entity.rotatePitch(90.0f);
 	entity.move(0,0,5);
 	engine.setActive(&entity); // Sets entityInTheEngine to be the target of user input (for example movement)
 	engine.gameLoop();
