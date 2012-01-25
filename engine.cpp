@@ -21,7 +21,7 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpened()){
+	while(window.IsOpen()){
 		graphics.clearBuffers();
 		processEvents();
 		for(auto i = objects.begin(); i != objects.end(); ++i)
