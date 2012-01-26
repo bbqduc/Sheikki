@@ -22,5 +22,5 @@ void main(void)
 		float fSpec = pow(spec, 32.0);
 		gl_FragColor.rgb += vec3(fSpec, fSpec, fSpec);
 	}
-//	gl_FragColor *= texture2D(textures[0], texcoord);
+	gl_FragColor *= texture2D(textures[0], texcoord);
 }

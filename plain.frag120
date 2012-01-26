@@ -4,9 +4,23 @@
 
 uniform sampler2D textures[1];
 varying vec2 texcoord;
-varying vec3 ex_Normal;
+varying vec3 vVaryingLightDir;
+varying vec3 vVaryingNormal;
 
 void main(void)
 {
-	gl_FragColor = vec4(0.6f, 0.6f, 0.6f, 0.6f);
+	vec4 ambientColor = vec4(0.2f,0.2f,0.2f,1.0f);
+	vec4 diffuseColor = vec4(1.0f,1.0f,1.0f,0.0f);
+	vec4 specularColor = vec4(0.2f,0.2f,0.2f,1.0f);
+	float diff = max(0.0, dot(normalize(vVaryingNormal), normalize(vVaryingLightDir)));
+	gl_FragColor = diff * diffuseColor;
+	gl_FragColor += ambientColor;
+	vec3 vReflection = normalize(reflect(-normalize(vVaryingLightDir),normalize(vVaryingNormal)));
+	float spec = max(0.0, dot(normalize(vVaryingNormal), vReflection));
+
+	if(diff != 0) {
+		float fSpec = pow(spec, 32.0);
+		gl_FragColor.rgb += vec3(fSpec, fSpec, fSpec);
+	}
+	gl_FragColor *= texture2D(textures[0], texcoord);
 }

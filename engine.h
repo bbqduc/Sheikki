@@ -10,6 +10,9 @@
 
 class Engine
 {
+	typedef std::list<Entity*> tObjects;
+	typedef std::list<Tank*> tTanks;
+	typedef std::list<Projectile*> tProjectiles;
 	private:
 		static const unsigned int KEYS=9;
 		bool keysDown[KEYS];
@@ -27,6 +30,8 @@ class Engine
 		void processEvents();
 		void handleKeyPress(sf::Event& e);
 		void applyInput(Entity* entity, sf::Uint32 delta);
+
+		bool running;
 
 	public:
 		static enum {UP, DOWN, LEFT, RIGHT, A, Z, Q, E, SPACE} keys; 

@@ -4,7 +4,8 @@
 Engine::Engine(int width, int height, int depth)
 	: window(sf::VideoMode(width, height, depth), "Shake-engine"),
 	graphics(),
-	objects()
+	objects(),
+	running(true)
 {
 	for(int i = 0; i < KEYS; ++i)
 	{
@@ -21,26 +22,27 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 void Engine::gameLoop()
 {
 	window.SetActive();
-	while(window.IsOpened()){
+	while(running){
 		graphics.clearBuffers();
-		for(auto i = objects.begin(); i != objects.end(); ++i)
+		processEvents();
+		for(tObjects::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->tick();
 			graphics.draw(*i);
 		}
-		for(auto i = tanks.begin(); i != tanks.end(); ++i)
+		for(tTanks::iterator i = tanks.begin(); i != tanks.end(); ++i)
 		{
 			(*i)->tick();
 			graphics.draw(*i);
 		}
 			
-		for(auto i = projectiles.begin(); i != projectiles.end();)
+		for(tProjectiles::iterator i = projectiles.begin(); i != projectiles.end();)
 		{
 			(*i)->tick();
 			graphics.draw(*i);
 			if((*i)->getTTL() < 0.0f)
 			{
-				auto j = i; ++i; removeProjectile(j);
+				tProjectiles::iterator j = i; ++i; removeProjectile(j);
 			}
 			else ++i;
 		}
@@ -49,8 +51,8 @@ void Engine::gameLoop()
 			activeTank->tick(keysDown, *this);
 		sf::Sleep(1);
 		window.Display();
-		processEvents();
 	}
+	window.Close();
 }
 
 void Engine::processEvents()
@@ -60,7 +62,7 @@ void Engine::processEvents()
 	{
 		// Close window : exit
 		if (event.Type == sf::Event::Closed)
-			window.Close();
+			running=false;
 		// Resize event : adjust viewport
 		if (event.Type == sf::Event::Resized)
 			graphics.reshape(event.Size.Width, event.Size.Height);
@@ -76,7 +78,7 @@ void Engine::handleKeyPress(sf::Event& event)
 	if(event.Type == sf::Event::KeyPressed)
 	{
 		if(event.Key.Code == sf::Keyboard::Escape)
-			window.Close();
+			running=false;
 		if(event.Key.Code == sf::Keyboard::Up)
 			keysDown[UP] = true;
 		if(event.Key.Code == sf::Keyboard::Down)
@@ -141,7 +143,7 @@ void Engine::addProjectile(Projectile* projectile, Shader* shader)
 void Engine::renderWithShader(Entity* entity, Shader* shader)
 {
 	bool success=false;
-	for(auto it=objects.begin(); it!=objects.end(); ++it)
+	for(tObjects::iterator it=objects.begin(); it!=objects.end(); ++it)
 	{
 		if(*it == entity)
 		{
@@ -157,7 +159,7 @@ Shader* Engine::getShader(Entity* entity) const
 {
 	bool success=false;
 	Shader* ret=NULL;
-	for(auto it=objects.begin(); it!=objects.end(); ++it)
+	for(tObjects::const_iterator it=objects.begin(); it!=objects.end(); ++it)
 	{
 		if(*it==entity)
 		{
