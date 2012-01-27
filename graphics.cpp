@@ -243,13 +243,13 @@ void Graphics::drawPhong(const Entity& e)
 	checkGLErrors("drawPhong");
 }
 
-void Graphics::drawExplosion(glm::vec3& position, float time, float lifetime)
+void Graphics::drawExplosion(glm::vec3& position, float lifetime)
 {
 	glm::mat4 VP = perspective * glm::translate(glm::mat4(1.0f), glm::vec3(0,0,-10));
-	glm::mat4 MVP = VP * glm::translate(glm::mat4(1.0f), position);
+	glm::mat4 MVP = VP * glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f),glm::vec3(lifetime));
 	sheikki_glBindVertexArray(models["sphere"].VAO_id);
 	glUseProgram(explosionShader.getId());
-	explosionShader.passUniforms(MVP, (lifetime - time) / lifetime);
+	explosionShader.passUniforms(MVP, lifetime);
 	glDrawElements(GL_TRIANGLES, 3*models["sphere"].num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
