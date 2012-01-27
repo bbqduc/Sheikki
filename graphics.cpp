@@ -50,7 +50,7 @@ void Graphics::initGlew()
 	{
 		std::cerr << "Using version 120 shaders!\n";
 	}
-	defaultShader.setShaderPaths("minimal.vert", "plain.frag");
+	defaultShader.setShaderPaths("plain.vert", "plain.frag");
 }
 
 void Graphics::initGL()
@@ -222,6 +222,7 @@ void Graphics::draw(const Entity* e)
 	sheikki_glBindVertexArray(e->model.VAO_id);
 	glUseProgram(s->getId());
 	s->passUniforms(e, perspective);
+	glBindTexture(GL_TEXTURE_2D, e->GetTexture());
 	glDrawElements(GL_TRIANGLES, 3*e->model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);

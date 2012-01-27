@@ -7,11 +7,12 @@
 int main()
 {
 
+
 	Engine engine;
 	{
-		Model tank = Model_Loader_3ds::read_model("tank.3ds"),
-			plane = Model_Loader_3ds::read_model("plane.3ds"),
-			bullet = Model_Loader_3ds::read_model("bullet.3ds");
+		Model tank = Model_Loader_3ds::read_model("tank.3ds", "camouflage.jpg"),
+			plane = Model_Loader_3ds::read_model("plane.3ds", "ground.jpg"),
+			bullet = Model_Loader_3ds::read_model("bullet.3ds", "TEXTURE_TEST.png");
 		engine.addModel("tank", tank);
 		engine.addModel("plane", plane);
 		engine.addModel("bullet", bullet);
@@ -20,12 +21,11 @@ int main()
 	Tank entity = Tank(engine.getModel("tank"));
 	Entity plane_e = Entity(engine.getModel("plane"));
 
-	engine.addTank(&entity);
+	PhongShader phong("phong.vert","phong.frag");
+	engine.addShader(&phong);
 
-	SimpleShader dark("minimal.vert","dark.frag");
-	SimpleShader plain("minimal.vert","plain.frag");
-	engine.addShader(&plain);
-	engine.addObject(&plane_e, &dark);
+	engine.addTank(&entity, &phong);
+	engine.addObject(&plane_e, &phong);
 
 	plane_e.rotatePitch(90.0f);
 	plane_e.move(0,-3,0);

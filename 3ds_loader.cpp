@@ -117,7 +117,7 @@ void Model_Loader_3ds::Chunk::skip_body(std::istream& stream)
 	stream.seekg(length + chunk_beginning);
 }
 
-Model Model_Loader_3ds::read_model(const std::string& filename)
+Model Model_Loader_3ds::read_model(const std::string& filename, const std::string& texturepath)
 {
 	std::ifstream infile(filename.c_str(), std::ios_base::binary | std::ios_base::in);	
 	assert(infile);
@@ -181,7 +181,8 @@ Model Model_Loader_3ds::read_model(const std::string& filename)
 	if(model.texcoords)
 	{
 		std::cout << " found!\n";
-		model.Init_Texture("camouflage.jpg");
+		model.Init_Texture(texturepath);
+		std::cout << "Initializing texture " << texturepath << std::endl;
 	}
 	else
 		std::cout << " not found!\n";

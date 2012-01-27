@@ -40,10 +40,36 @@ class Shader
 		GLint GetMVMatrix() const {assert(initialized); return MVLoc;}
 		GLint GetNMatrix() const {assert(initialized); return NLoc;}
 		GLint GetTexture() const {assert(initialized); return textureLoc;}
-		virtual void passUniforms(const Entity* e, glm::mat4& perspective)=0;
+		virtual void passUniforms(const Entity* e, const glm::mat4& perspective)=0;
 };
 
 class SimpleShader : public Shader
+{
+	friend class Graphics;
+	protected:
+		virtual void bindAttributes()
+		{
+			glBindAttribLocation(id,0, "in_Position");
+		}
+		virtual void setUniformLocations()
+		{
+			MVPLoc = glGetUniformLocation(id, "MVP");
+		}
+	public:
+		virtual void passUniforms(const Entity* e, const glm::mat4& perspective) // Is passing the perspective stupid?
+		{
+			glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+			glm::mat4 MV = T * e->getPos() * e->getOrientation();
+			glm::mat4 MVP = perspective * MV;
+
+			// Pass the modelviewmatrix to shader
+			glUniformMatrix4fv(GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
+		}
+		SimpleShader() : Shader() {}
+		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
+};
+
+class PhongShader : public Shader
 {
 	friend class Graphics;
 	protected:
@@ -61,7 +87,7 @@ class SimpleShader : public Shader
 			textureLoc = glGetUniformLocation(id, "textures[0]");
 		}
 	public:
-		virtual void passUniforms(const Entity* e, glm::mat4& perspective) // Is passing the perspective stupid?
+		virtual void passUniforms(const Entity* e, const glm::mat4& perspective) // Is passing the perspective stupid?
 		{
 			glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 			glm::mat4 MV = T * e->getPos() * e->getOrientation();
@@ -74,8 +100,8 @@ class SimpleShader : public Shader
 			glUniformMatrix3fv(GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
 			glUniformMatrix4fv(GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
 		}
-		SimpleShader() : Shader() {}
-		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
+		PhongShader() : Shader() {}
+		PhongShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
 };
 
 class Graphics

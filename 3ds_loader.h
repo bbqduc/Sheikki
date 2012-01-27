@@ -24,5 +24,5 @@ class Model_Loader_3ds
 	static uint16_t read_texcoords(std::istream&, Model&);
 	static std::string read_model_name(std::istream&);
 	public:
-	static Model read_model(const std::string&);
+	static Model read_model(const std::string&, const std::string&);
 };
