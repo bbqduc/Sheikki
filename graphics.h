@@ -38,6 +38,7 @@ class Shader
 		GLint GetMVMatrix() const {assert(initialized); return MVLoc;}
 		GLint GetNMatrix() const {assert(initialized); return NLoc;}
 		GLint GetTexture() const {assert(initialized); return textureLoc;}
+
 		void passUniforms(const Entity& e, glm::mat4& perspective);
 };
 
@@ -46,6 +47,33 @@ class SimpleShader : public Shader
 	friend class Graphics;
 	protected:
 		void bindAttributes()
+		{
+			glBindAttribLocation(id,0, "in_Position");
+		}
+		virtual void setUniformLocations()
+		{
+			MVPLoc = glGetUniformLocation(id, "MVP");
+		}
+	public:
+		virtual void passUniforms(const Entity* e, const glm::mat4& perspective) // Is passing the perspective stupid?
+		{
+			glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+			glm::mat4 MV = T * e->getPos() * e->getOrientation();
+			glm::mat4 MVP = perspective * MV;
+
+			// Pass the modelviewmatrix to shader
+			glUniformMatrix4fv(GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
+		}
+		void init() { Shader::init(); bindAttributes(); setUniformLocations(); }
+		SimpleShader() : Shader() {}
+		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
+};
+
+class PhongShader : public Shader
+{
+	friend class Graphics;
+	protected:
+		virtual void bindAttributes()
 		{
 			glBindAttribLocation(id,0, "in_Position");
 			glBindAttribLocation(id,1, "in_Normal");
@@ -61,9 +89,10 @@ class SimpleShader : public Shader
 		}
 	public:
 		void init() { Shader::init(); bindAttributes(); setUniformLocations(); }
-		SimpleShader() : Shader() {}
-		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); bindAttributes(); setUniformLocations();}
+		PhongShader() : Shader() {}
+		PhongShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
 };
+
 
 class ExplosionShader : public Shader
 {
@@ -84,6 +113,7 @@ class ExplosionShader : public Shader
 		ExplosionShader() : Shader() {}
 		ExplosionShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); bindAttributes(); setUniformLocations();}
 		void passUniforms(glm::mat4& MVP, float timeleft);
+
 };
 
 class Graphics
@@ -94,6 +124,7 @@ class Graphics
 	std::map<std::string, Model> models;
 
 	SimpleShader defaultShader;
+	PhongShader phongShader;
 	ExplosionShader explosionShader;
 
 	glm::mat4 perspective;
@@ -109,7 +140,7 @@ class Graphics
 
 	void reshape(int width, int height);
 	void clearBuffers();
-	void drawSimple(const Entity&);
+	void drawPhong(const Entity&);
 	void drawExplosion(glm::vec3& position, float time, float lifetime);
 
 };

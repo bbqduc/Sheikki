@@ -16,6 +16,7 @@
 	initGL();
 	defaultShader.init();
 	explosionShader.init();
+	phongShader.init();
 	//	initFonts();
 }
 
@@ -51,8 +52,10 @@ void Graphics::initGlew()
 	{
 		std::cerr << "Using version 120 shaders!\n";
 	}
-	defaultShader.setShaderPaths("minimal.vert", "plain.frag");
+
+	defaultShader.setShaderPaths("plain.vert", "plain.frag");
 	explosionShader.setShaderPaths("explosion.vert", "explosion.frag");
+	phongShader.setShaderPaths("phong.vert", "phong.frag");
 }
 
 void Graphics::initGL()
@@ -227,16 +230,17 @@ void Graphics::clearBuffers()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Graphics::drawSimple(const Entity& e)
+void Graphics::drawPhong(const Entity& e)
 {
 	sheikki_glBindVertexArray(e.model.VAO_id);
-	glUseProgram(defaultShader.getId());
-	defaultShader.passUniforms(e, perspective);
+	glUseProgram(phongShader.getId());
+	phongShader.passUniforms(e, perspective);
+	glBindTexture(GL_TEXTURE_2D, e.GetTexture());
 	glDrawElements(GL_TRIANGLES, 3*e.model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
 	
-	checkGLErrors("drawSimple");
+	checkGLErrors("drawPhong");
 }
 
 void Graphics::drawExplosion(glm::vec3& position, float time, float lifetime)

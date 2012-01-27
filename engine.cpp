@@ -28,12 +28,12 @@ void Engine::gameLoop()
 		for(tObjects::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->tick();
-			graphics.drawSimple(**i);
+			graphics.drawPhong(**i);
 		}
 		for(tTanks::iterator i = tanks.begin(); i != tanks.end(); ++i)
 		{
 			(*i)->tick();
-			graphics.drawSimple(**i);
+			graphics.drawPhong(**i);
 		}
 
 		for(tProjectiles::iterator i = projectiles.begin(); i != projectiles.end();)
@@ -51,7 +51,7 @@ void Engine::gameLoop()
 				}
 			}
 			else 
-				graphics.drawSimple(**i);
+				graphics.drawPhong(**i);
 			++i;
 		}
 
