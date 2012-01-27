@@ -105,8 +105,9 @@ class ExplosionShader : public Shader
 		}
 		void setUniformLocations()
 		{
-			MVPLoc = glGetUniformLocation(id, "MVP");
-			timeleftLoc = glGetUniformLocation(id, "timeleft");
+			MVPLoc = glGetUniformLocation(id, "MVP");				//assert(MVPLoc != -1);
+			timeleftLoc = glGetUniformLocation(id, "timeleft");		//assert(timeleftLoc != -1);
+			textureLoc = glGetUniformLocation(id, "textures[0]");	//assert(textureLoc != -1);
 		}
 	public:
 		void init() { Shader::init(); bindAttributes(); setUniformLocations(); }

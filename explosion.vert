@@ -3,7 +3,9 @@
 #version 330
 
 in vec3 in_Position;
+in vec2 in_TexCoords;
 smooth out float dist;
+smooth out vec2 texcoord;
 
 uniform mat4 MVP;
 uniform float timeleft;
@@ -11,5 +13,7 @@ uniform float timeleft;
 void main(void)
 {
 	gl_Position = MVP * vec4(in_Position, 1.0f);
-	dist = 1.0f / (1.0f + distance(vec3(0.0f), in_Position));
+	texcoord[0] = 1-in_TexCoords[0];
+	texcoord[1] = in_TexCoords[1];
+	//dist = 1.0f / (1.0f + distance(vec3(0.0f), in_Position));
 }

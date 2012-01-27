@@ -249,6 +249,7 @@ void Graphics::drawExplosion(glm::vec3& position, float lifetime)
 	glm::mat4 MVP = VP * glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f),glm::vec3(lifetime));
 	sheikki_glBindVertexArray(models["sphere"].VAO_id);
 	glUseProgram(explosionShader.getId());
+	glBindTexture(GL_TEXTURE_2D, models["sphere"].GetTexture());
 	explosionShader.passUniforms(MVP, lifetime);
 	glDrawElements(GL_TRIANGLES, 3*models["sphere"].num_polygons, GL_UNSIGNED_INT, 0);
 
