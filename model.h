@@ -36,6 +36,7 @@ class Model
 	Model(const Model&);
 	Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, GLint drawMode = GL_TRIANGLES);
 	Model(int num_vertices, int num_polygons, glm::vec3 *vertices, glm::uvec3 *polygons, glm::vec2 *texcoords, GLint drawMode, std::string texturepath);
+	Model& operator=(const Model& rhs);
 	~Model();
 	GLuint GetTexture() const;
 };

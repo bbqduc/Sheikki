@@ -84,6 +84,41 @@ num_vertices(num_vertices_),
 
 }
 
+Model& Model::operator=(const Model& rhs)
+{
+	if(this!=&rhs)
+	{
+		name=rhs.name;
+		num_vertices=rhs.num_vertices;
+		num_polygons=rhs.num_polygons;
+		vertices=new glm::vec3[num_vertices];
+		polygons=new glm::uvec3[num_polygons];
+		texcoords=NULL;
+		normals=new glm::vec3[num_vertices];
+		drawMode=rhs.drawMode;
+		texture=rhs.texture;
+		texturecoords=rhs.texturecoords;
+		VBO_vertices_id=rhs.VBO_vertices_id;
+		VBO_normals_id=rhs.VBO_normals_id;
+		VBO_indices_id=rhs.VBO_indices_id;
+		VBO_color_id=rhs.VBO_color_id;
+		VBO_texcoord_id=rhs.VBO_texcoord_id;
+		VAO_id=rhs.VAO_id;
+		if(rhs.texcoords)
+			texcoords = new glm::vec2[num_vertices];
+		for(size_t i = 0; i < num_polygons; ++i)
+			polygons[i] = rhs.polygons[i];
+		for(size_t i = 0; i < num_vertices; ++i)
+		{
+			vertices[i] = rhs.vertices[i];
+			normals[i] = rhs.normals[i];
+			if(texcoords)
+				texcoords[i] = rhs.texcoords[i];
+		}
+	}
+	return *this;
+}
+
 void Model::calculate_normals()
 {
 	normals = new glm::vec3[num_vertices];	
