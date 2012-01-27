@@ -9,6 +9,10 @@
 #include "entity.h"
 #include <list>
 #include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Shader
 {
@@ -36,19 +40,20 @@ class Shader
 		GLint GetMVMatrix() const {assert(initialized); return MVLoc;}
 		GLint GetNMatrix() const {assert(initialized); return NLoc;}
 		GLint GetTexture() const {assert(initialized); return textureLoc;}
+		virtual void passUniforms(const Entity* e, glm::mat4& perspective)=0;
 };
 
 class SimpleShader : public Shader
 {
 	friend class Graphics;
-	private:
-		void bindAttributes()
+	protected:
+		virtual void bindAttributes()
 		{
 			glBindAttribLocation(id,0, "in_Position");
 			glBindAttribLocation(id,1, "in_Normal");
 			glBindAttribLocation(id,2, "in_TexCoords");
 		}
-		void setUniformLocations()
+		virtual void setUniformLocations()
 		{
 			MVPLoc = glGetUniformLocation(id, "MVP");
 			NLoc = glGetUniformLocation(id, "N");
@@ -56,6 +61,19 @@ class SimpleShader : public Shader
 			textureLoc = glGetUniformLocation(id, "textures[0]");
 		}
 	public:
+		virtual void passUniforms(const Entity* e, glm::mat4& perspective) // Is passing the perspective stupid?
+		{
+			glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+			glm::mat4 MV = T * e->getPos() * e->getOrientation();
+			glm::mat4 MVP = perspective * MV;
+			glm::mat3 N(MV);
+			N = glm::transpose(glm::inverse(N));
+
+			// Pass the modelviewmatrix to shader
+			glUniformMatrix4fv(GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
+			glUniformMatrix3fv(GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
+			glUniformMatrix4fv(GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
+		}
 		SimpleShader() : Shader() {}
 		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init();}
 };
@@ -67,8 +85,9 @@ class Graphics
 	FT_Uint charIndex;*/
 	std::map<std::string, Model> models;
 
-	glm::mat4 perspective;
 	SimpleShader defaultShader;
+
+	glm::mat4 perspective;
 
 	void initFonts();
 	void initGlew();
@@ -82,7 +101,6 @@ class Graphics
 	void reshape(int width, int height);
 	void clearBuffers();
 	void draw(const Entity*);
-
 };
 
 #endif

@@ -6,16 +6,12 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_inverse.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
 	Graphics::Graphics()
 {
-	perspective = glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
+	perspective=glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
 	initGlew();
 	initGL();
 	defaultShader.init();
@@ -225,21 +221,7 @@ void Graphics::draw(const Entity* e)
 	if(!s) s=&defaultShader;
 	sheikki_glBindVertexArray(e->model.VAO_id);
 	glUseProgram(s->getId());
-
-	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-//	glm::mat4 Rx	= glm::rotate(T,  10.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-//	glm::mat4 Ry	= glm::rotate(Rx, 3.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-//	glm::mat4 MV	= glm::rotate(Ry, 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 MV = T * e->position * e->orientation;
-	glm::mat4 MVP = perspective * MV;
-	glm::mat3 N(MV);
-	N = glm::transpose(glm::inverse(N));
-
-	// Pass the modelviewmatrix to shader
-	glUniformMatrix4fv(s->GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniformMatrix3fv(s->GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
-	glUniformMatrix4fv(s->GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
-
+	s->passUniforms(e, perspective);
 	glDrawElements(GL_TRIANGLES, 3*e->model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);

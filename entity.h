@@ -22,6 +22,8 @@ protected:
 public:
 	Entity(const Model&);
 	void setPos(float,float,float);
+	const glm::mat4& getPos() const {return position;}
+	const glm::mat4& getOrientation() const {return orientation;}
 	void setVelocity(float);
 	void setDirection(glm::vec3& dir);
 	
