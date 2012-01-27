@@ -8,10 +8,10 @@
 
 void Tank::fire(Engine& engine)
 {
-	Projectile* proj = new Projectile(engine.getModel("bullet"), 10.0f);
+	Projectile* proj = new Projectile(engine.getModel("bullet"), 100.0f);
 	proj->setPos(position[3][0], position[3][1], position[3][2]);
 	proj->rotate(orientation);
-	proj->setVelocity(0.1f);
+	proj->setVelocity(0.01f);
 	glm::vec3 dir=glm::vec3(orientation[1]);
 	proj->setDirection(dir);
 
