@@ -11,10 +11,13 @@ int main()
 	{
 		Model tank = Model_Loader_3ds::read_model("tank.3ds"),
 			plane = Model_Loader_3ds::read_model("plane.3ds"),
-			bullet = Model_Loader_3ds::read_model("bullet.3ds");
+			bullet = Model_Loader_3ds::read_model("bullet.3ds"),
+			sphere = Model_Loader_3ds::read_model("box.3ds");
+
 		engine.addModel("tank", tank);
 		engine.addModel("plane", plane);
 		engine.addModel("bullet", bullet);
+		engine.addModel("sphere", sphere);
 	}
 
 	Tank entity = Tank(engine.getModel("tank"));

@@ -183,8 +183,6 @@ void Shader::init()
 
 	id = glCreateProgram();
 
-	bindAttributes();
-
 	glAttachShader(id,v);
 	glAttachShader(id,f);
 
@@ -203,9 +201,8 @@ void Shader::init()
 	initialized=true;
 }
 
-void Shader::passUniforms(const Entity& e)
+void Shader::passUniforms(const Entity& e, glm::mat4& perspective)
 {
-	Shader::passUniforms(e, perspective);
 	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f)); // camera position
 	glm::mat4 MV = T * e.getPos() * e.getOrientation(); // adding object position
 	glm::mat4 MVP = perspective * MV;
@@ -216,12 +213,13 @@ void Shader::passUniforms(const Entity& e)
 	glUniformMatrix4fv(GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
 	glUniformMatrix3fv(GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
 	glUniformMatrix4fv(GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
+	checkGLErrors("Shader::passUniforms");
 }
 
 void ExplosionShader::passUniforms(glm::mat4& MVP, float timeleft)
 {
 	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
-	glUniform1f(timeleftLoc, 1, GL_FALSE, &timeleft);
+	glUniform1f(timeleftLoc, timeleft);
 }
 
 void Graphics::clearBuffers()
@@ -232,18 +230,19 @@ void Graphics::clearBuffers()
 void Graphics::drawSimple(const Entity& e)
 {
 	sheikki_glBindVertexArray(e.model.VAO_id);
-	glUseProgram(simpleShader.getId());
-	simpleShader.passUniforms(e, perspective);
+	glUseProgram(defaultShader.getId());
+	defaultShader.passUniforms(e, perspective);
 	glDrawElements(GL_TRIANGLES, 3*e.model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
-
+	
 	checkGLErrors("drawSimple");
 }
 
 void Graphics::drawExplosion(glm::vec3& position, float time, float lifetime)
 {
-	glm::mat4 MVP = glm::translate(VP, position);
+	glm::mat4 VP = perspective * glm::translate(glm::mat4(1.0f), glm::vec3(0,0,-10));
+	glm::mat4 MVP = VP * glm::translate(glm::mat4(1.0f), position);
 	sheikki_glBindVertexArray(models["sphere"].VAO_id);
 	glUseProgram(explosionShader.getId());
 	explosionShader.passUniforms(MVP, (lifetime - time) / lifetime);

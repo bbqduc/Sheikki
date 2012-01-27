@@ -28,12 +28,12 @@ void Engine::gameLoop()
 		for(tObjects::iterator i = objects.begin(); i != objects.end(); ++i)
 		{
 			(*i)->tick();
-			graphics.draw(*i);
+			graphics.drawSimple(**i);
 		}
 		for(tTanks::iterator i = tanks.begin(); i != tanks.end(); ++i)
 		{
 			(*i)->tick();
-			graphics.draw(*i);
+			graphics.drawSimple(**i);
 		}
 
 		for(tProjectiles::iterator i = projectiles.begin(); i != projectiles.end();)
@@ -42,20 +42,21 @@ void Engine::gameLoop()
 			(*i)->tick();
 			if(TTL < 0.0f)
 			{
-				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL, 10.0f);	
-				if(TTL < -10.0f)
+				(*i)->setVelocity(0.0f);
+				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL, 100.0f);
+				if(TTL < -100.0f)
+				{
 					tProjectiles::iterator j = i; ++i; removeProjectile(j);
+					continue;
+				}
 			}
 			else 
-			{
-				graphics.draw(*i);
-				++i;
-			}
+				graphics.drawSimple(**i);
+			++i;
 		}
 
 		if(activeTank)
 			activeTank->tick(keysDown, *this);
-		sf::Sleep(1);
 		window.Display();
 	}
 	window.Close();
@@ -131,51 +132,16 @@ void Engine::handleKeyPress(sf::Event& event)
 void Engine::addObject(Entity* entity, Shader* shader)
 {
 	objects.push_back(entity);
-	entity->activeShader = shader;
 }
 
 void Engine::addTank(Tank* tank, Shader* shader)
 {
 	tanks.push_back(tank);
-	tank->activeShader = shader;
 }
 
 void Engine::addProjectile(Projectile* projectile, Shader* shader)
 {
 	projectiles.push_back(projectile);
-	projectile->activeShader = shader;
-}
-
-void Engine::renderWithShader(Entity* entity, Shader* shader)
-{
-	bool success=false;
-	for(tObjects::iterator it=objects.begin(); it!=objects.end(); ++it)
-	{
-		if(*it == entity)
-		{
-			(*it)->activeShader = shader;
-			success=true;
-			break;
-		}
-	}
-	if(!success) std::cerr << "Couldn't set shader to entity. Entity doesn't exist." << std::endl;
-}
-
-Shader* Engine::getShader(Entity* entity) const
-{
-	bool success=false;
-	Shader* ret=NULL;
-	for(tObjects::const_iterator it=objects.begin(); it!=objects.end(); ++it)
-	{
-		if(*it==entity)
-		{
-			ret=(*it)->activeShader;
-			success=true;
-			break;
-		}
-	}
-	if(!success) std::cerr << "Couldn't get shader from entity. Entity doesn't exist." << std::endl;
-	return ret;
 }
 
 void Engine::setActive(Tank* tank)

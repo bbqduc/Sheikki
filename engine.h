@@ -47,8 +47,6 @@ class Engine
 
 
 		void addShader(Shader* shader) {unused_shaders.push_back(shader);}
-		void renderWithShader(Entity* entity, Shader* shader);
-		Shader* getShader(Entity* entity) const;
 		void setActive(Tank* tank);
 
 		void gameLoop();

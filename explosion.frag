@@ -5,7 +5,7 @@
 uniform float timeleft;
 
 smooth in float dist;
-out vec4 vFragColor
+out vec4 vFragColor;
 
 void main(void) {
 	vFragColor = vec4(1.0f) * dist * timeleft;

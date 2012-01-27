@@ -38,7 +38,7 @@ class Shader
 		GLint GetMVMatrix() const {assert(initialized); return MVLoc;}
 		GLint GetNMatrix() const {assert(initialized); return NLoc;}
 		GLint GetTexture() const {assert(initialized); return textureLoc;}
-		void passUniforms(const Entity* e, glm::mat4& perspective);
+		void passUniforms(const Entity& e, glm::mat4& perspective);
 };
 
 class SimpleShader : public Shader
@@ -53,18 +53,21 @@ class SimpleShader : public Shader
 		}
 		void setUniformLocations()
 		{
-			MVPLoc = glGetUniformLocation(id, "MVP");
-			NLoc = glGetUniformLocation(id, "N");
-			MVLoc = glGetUniformLocation(id, "MV");
-			textureLoc = glGetUniformLocation(id, "textures[0]");
+			MVPLoc = glGetUniformLocation(id, "MVP");				assert(MVPLoc != -1);
+			NLoc = glGetUniformLocation(id, "N");					assert(NLoc != -1);
+			MVLoc = glGetUniformLocation(id, "MV");					assert(MVLoc != -1);
+			textureLoc = glGetUniformLocation(id, "textures[0]");	assert(textureLoc != -1);
+			
 		}
 	public:
+		void init() { Shader::init(); bindAttributes(); setUniformLocations(); }
 		SimpleShader() : Shader() {}
-		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); setUniformLocations();}
+		SimpleShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); bindAttributes(); setUniformLocations();}
 };
 
 class ExplosionShader : public Shader
 {
+	GLint timeleftLoc;
 	friend class Graphics;
 	protected:
 		void bindAttributes()
@@ -74,11 +77,13 @@ class ExplosionShader : public Shader
 		void setUniformLocations()
 		{
 			MVPLoc = glGetUniformLocation(id, "MVP");
-			timeLoc = glGetUniformLocation(id, "timeleft");
+			timeleftLoc = glGetUniformLocation(id, "timeleft");
 		}
 	public:
-		ExplosionShaer() : Shader() {}
-		ExplosionShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); setUniformLocations();}
+		void init() { Shader::init(); bindAttributes(); setUniformLocations(); }
+		ExplosionShader() : Shader() {}
+		ExplosionShader(const char* vp, const char* fp) : Shader(vp,fp) {init(); bindAttributes(); setUniformLocations();}
+		void passUniforms(glm::mat4& MVP, float timeleft);
 };
 
 class Graphics
@@ -104,7 +109,9 @@ class Graphics
 
 	void reshape(int width, int height);
 	void clearBuffers();
-	void draw(const Entity*);
+	void drawSimple(const Entity&);
+	void drawExplosion(glm::vec3& position, float time, float lifetime);
+
 };
 
 #endif
