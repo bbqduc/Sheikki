@@ -15,6 +15,7 @@
 	initGlew();
 	initGL();
 	defaultShader.init();
+	explosionShader.init();
 	//	initFonts();
 }
 
@@ -51,6 +52,7 @@ void Graphics::initGlew()
 		std::cerr << "Using version 120 shaders!\n";
 	}
 	defaultShader.setShaderPaths("minimal.vert", "plain.frag");
+	explosionShader.setShaderPaths("explosion.vert", "explosion.frag");
 }
 
 void Graphics::initGL()
@@ -123,7 +125,6 @@ void Shader::printShaderInfoLog(GLint shader)
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
 
 	checkGLErrors("shaderinfolog");
-	// should additionally check for OpenGL errors here
 
 	if (infoLogLen > 0)
 	{
@@ -134,7 +135,6 @@ void Shader::printShaderInfoLog(GLint shader)
 		delete [] infoLog;
 	}
 
-	// should additionally check for OpenGL errors here
 	checkGLErrors("shaderinfolog");
 }
 
@@ -195,19 +195,33 @@ void Shader::init()
 	printShaderInfoLog(f);
 	printShaderInfoLog(v);
 
-	setUniformLocations();
-
-	checkGLErrors("initShaders - binding uniforms");
-
-	//assert(MVPLoc != -1);
-	//assert(NLoc != -1);
-
-	delete [] vs; // dont forget to free allocated memory
-	delete [] fs; // we allocated this in the loadFile function...
+	delete [] vs; 
+	delete [] fs;
 
 	checkGLErrors("initShaders");
 
 	initialized=true;
+}
+
+void Shader::passUniforms(const Entity& e)
+{
+	Shader::passUniforms(e, perspective);
+	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f)); // camera position
+	glm::mat4 MV = T * e.getPos() * e.getOrientation(); // adding object position
+	glm::mat4 MVP = perspective * MV;
+	glm::mat3 N(MV);
+	N = glm::transpose(glm::inverse(N));
+
+	// Pass the modelviewmatrix to shader
+	glUniformMatrix4fv(GetMVPMatrix(), 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniformMatrix3fv(GetNMatrix(), 1, GL_FALSE, glm::value_ptr(N));
+	glUniformMatrix4fv(GetMVMatrix(), 1, GL_FALSE, glm::value_ptr(MV));
+}
+
+void ExplosionShader::passUniforms(glm::mat4& MVP, float timeleft)
+{
+	glUniformMatrix4fv(MVPLoc, 1, GL_FALSE, glm::value_ptr(MVP));
+	glUniform1f(timeleftLoc, 1, GL_FALSE, &timeleft);
 }
 
 void Graphics::clearBuffers()
@@ -215,18 +229,29 @@ void Graphics::clearBuffers()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Graphics::draw(const Entity* e)
+void Graphics::drawSimple(const Entity& e)
 {
-	Shader* s = e->activeShader;
-	if(!s) s=&defaultShader;
-	sheikki_glBindVertexArray(e->model.VAO_id);
-	glUseProgram(s->getId());
-	s->passUniforms(e, perspective);
-	glDrawElements(GL_TRIANGLES, 3*e->model.num_polygons, GL_UNSIGNED_INT, 0);
+	sheikki_glBindVertexArray(e.model.VAO_id);
+	glUseProgram(simpleShader.getId());
+	simpleShader.passUniforms(e, perspective);
+	glDrawElements(GL_TRIANGLES, 3*e.model.num_polygons, GL_UNSIGNED_INT, 0);
 
 	glUseProgram(0);
 
-	checkGLErrors("display");
+	checkGLErrors("drawSimple");
+}
+
+void Graphics::drawExplosion(glm::vec3& position, float time, float lifetime)
+{
+	glm::mat4 MVP = glm::translate(VP, position);
+	sheikki_glBindVertexArray(models["sphere"].VAO_id);
+	glUseProgram(explosionShader.getId());
+	explosionShader.passUniforms(MVP, (lifetime - time) / lifetime);
+	glDrawElements(GL_TRIANGLES, 3*models["sphere"].num_polygons, GL_UNSIGNED_INT, 0);
+
+	glUseProgram(0);
+
+	checkGLErrors("drawExplosion");
 }
 
 void Graphics::addModel(std::string id, Model& model)

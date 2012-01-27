@@ -1,9 +1,10 @@
 #include "tank.h"
 #include "engine.h"
 
-
 	Tank::Tank(const Model& model):
-	Entity(model) {}
+	Entity(model),
+	cannonCoolDown(1.0f)
+	{}
 
 void Tank::fire(Engine& engine)
 {
@@ -15,19 +16,21 @@ void Tank::fire(Engine& engine)
 	proj->setDirection(dir);
 
 	engine.addProjectile(proj);
+	cannonCoolDown = 1.0f;
 }
 
 void Tank::tick(bool keysDown[], Engine& engine)
 {
 	Entity::tick(keysDown);
-	if(keysDown[Engine::SPACE])
+	if(keysDown[Engine::SPACE] && cannonCoolDown < 0)
 	{
 		fire(engine);
-		keysDown[Engine::SPACE] = false;
 	}
 }
 
 void Tank::tick()
 {
 	Entity::tick();
+	if(cannonCoolDown >= 0.0f)
+		cannonCoolDown -= 0.1f;
 }

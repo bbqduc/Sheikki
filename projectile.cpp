@@ -11,6 +11,4 @@
 	{
 		Entity::tick();
 		TTL -= 0.1f;
-		if(TTL < 0)
-			std::cout << "KABOOOOOOOOOOOOOOMMMMMMMMMMMMM!\n";
 	}

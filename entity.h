@@ -9,8 +9,6 @@ class Shader;
 class Entity{
 	friend class Graphics; // Graphics needs access to model for drawing
 	friend class Engine;
-private:
-	Shader* activeShader;
 protected:
 	const Model& model;
 	glm::mat4 position, orientation;
@@ -36,6 +34,5 @@ public:
 	void tick();
 	void tick(bool[]);
 	GLuint GetTexture() const;
-	//Entity fire();
 };	
 #endif

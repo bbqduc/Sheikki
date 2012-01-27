@@ -5,7 +5,6 @@
 
 Entity::Entity(const Model& model_)
 	: 
-	activeShader(NULL),
 	model(model_),
 	position(	1.0f),
 	orientation(1.0f),

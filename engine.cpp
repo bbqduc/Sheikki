@@ -35,16 +35,22 @@ void Engine::gameLoop()
 			(*i)->tick();
 			graphics.draw(*i);
 		}
-			
+
 		for(tProjectiles::iterator i = projectiles.begin(); i != projectiles.end();)
 		{
+			float TTL = (*i)->getTTL();
 			(*i)->tick();
-			graphics.draw(*i);
-			if((*i)->getTTL() < 0.0f)
+			if(TTL < 0.0f)
 			{
-				tProjectiles::iterator j = i; ++i; removeProjectile(j);
+				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL, 10.0f);	
+				if(TTL < -10.0f)
+					tProjectiles::iterator j = i; ++i; removeProjectile(j);
 			}
-			else ++i;
+			else 
+			{
+				graphics.draw(*i);
+				++i;
+			}
 		}
 
 		if(activeTank)

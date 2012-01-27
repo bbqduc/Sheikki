@@ -5,6 +5,7 @@ class Engine;
 
 class Tank: public Entity
 {
+	float cannonCoolDown;
 	void fire(Engine&);
 public:
 	Tank(const Model&);
