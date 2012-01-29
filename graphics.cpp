@@ -13,8 +13,8 @@
 	Graphics::Graphics()
 {
 	perspective=glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
-	initGl3w();
 	initGlfw();
+	initGl3w();
 	initGL();
 	initShaders();
 	//initFonts();
@@ -29,7 +29,7 @@ void Graphics::initShaders()
 	phongShader.init();
 }
 
-void Graphics::initGLFW()
+void Graphics::initGlfw()
 {
 	if(!glfwInit())
 	{
@@ -61,7 +61,7 @@ void Graphics::initFonts()
 		FT_Set_Char_Size(fontinfo, 8, 8, 0, 0);*/
 }
 
-void Graphics::initGlew()
+void Graphics::initGl3w()
 {
 	int err=gl3wInit();
 	if(err) {std::cerr << "Error initializing gl3w." << std::endl; exit(-1);}

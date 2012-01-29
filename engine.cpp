@@ -3,7 +3,7 @@
 #include <GL/glfw.h>
 
 Engine::Engine(int width, int height, int depth)
-	graphics(),
+	:graphics(),
 	objects(),
 	running(true)
 {
@@ -21,7 +21,8 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 
 void Engine::gameLoop()
 {
-	while(running){
+	while(running)
+	{
 		graphics.clearBuffers();
 		processEvents();
 		for(tObjects::iterator i = objects.begin(); i != objects.end(); ++i)
@@ -64,6 +65,7 @@ void Engine::gameLoop()
 
 void Engine::processEvents()
 {
+	running=(bool)glfwGetWindowParam(GLFW_OPENED);
 #ifndef __APPLE__
 	sf::Event event;
 	while (window.PollEvent(event))
