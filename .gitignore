@@ -1,6 +1,7 @@
 *.swp
 .depend
 *.o
+gl3w.c
 main
 tags
 glm/
