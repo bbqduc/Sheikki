@@ -1,6 +1,6 @@
 // Vertex Shader  file "explosion.vert"
 
-#version 330
+#version 150
 
 in vec3 in_Position;
 in vec2 in_TexCoords;

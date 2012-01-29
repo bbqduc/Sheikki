@@ -1,6 +1,6 @@
 // Fragment Shader – file "minimal.frag"
 
-#version 330
+#version 150
 
 uniform sampler2D textures[1];
 smooth in vec2 texcoord;
@@ -22,6 +22,6 @@ void main(void) {
 		float fSpec = pow(spec, 32.0);
 		vFragColor.rgb += vec3(fSpec, fSpec, fSpec);
 	}
-	vFragColor *= texture2D(textures[0], texcoord);
+	vFragColor = texture(textures[0], texcoord);
 
 }

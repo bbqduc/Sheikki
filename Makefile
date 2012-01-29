@@ -1,4 +1,4 @@
-CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -O3 -I/usr/local/include -I.
+CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -g3 -I/usr/local/include -I.
 SFML = -lsfml-window -lsfml-system -lsfml-graphics
 CPPS = main.cpp entity.cpp model.cpp graphics.cpp engine.cpp 3ds_loader.cpp projectile.cpp tank.cpp
 OBJS = main.o entity.o model.o graphics.o engine.o 3ds_loader.o
@@ -13,8 +13,8 @@ windows: main.o entity.o model.o graphics.o engine.o 3ds_loader.o
 	$(CC) -o main main.o entity.o model.o graphics.o engine.o 3ds_loader.o -lmingw32 -lopengl32 -lglu32 -lglew32 $(SFML)
 linux: main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o
 	$(CC) -o main main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o -lGL -lGLU -lGLEW -lXrandr $(SFML)
-osx: main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o
-	$(CC) -o main main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o  -lGLEW -framework OpenGL $(SFML)
+osx: main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o gl3w.o
+	$(CC) -o main main.o entity.o model.o graphics.o engine.o 3ds_loader.o projectile.o tank.o gl3w.o -framework OpenGL $(SFML) -lglfw -framework Cocoa
 matrix_test: test_matrix.o
 	$(CC) -o matrix_test test_matrix.o
 main.o:
@@ -35,5 +35,7 @@ projectile.o:
 	$(CC) -c projectile.cpp
 tank.o:
 	$(CC) -c tank.cpp
+gl3w.o:
+	$(CC) -c gl3w.c
 clean:
 	rm *.o

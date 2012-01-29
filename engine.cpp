@@ -1,12 +1,37 @@
 #include "engine.h"
 #include <iostream>
+#ifdef __APPLE__
+	#include <GL/glfw.h>
+#endif
 
 Engine::Engine(int width, int height, int depth)
+#ifdef __APPLE__
+	:
+#else
 	: window(sf::VideoMode(width, height, depth), "Shake-engine"),
+#endif
 	graphics(),
 	objects(),
 	running(true)
 {
+#ifdef __APPLE__
+/*
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	if( !glfwOpenWindow( width, height, 0,0,0,0, 0,0, GLFW_WINDOW ) )
+	{
+		std::cerr << "Failed to open glfw window" << std::endl;
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	glfwSetWindowTitle("Shake-engine");
+	glfwEnable( GLFW_STICKY_KEYS );
+	// Enable vertical sync (on cards that support it)
+	glfwSwapInterval( 1 );
+*/
+#endif
 	for(int i = 0; i < KEYS; ++i)
 	{
 		keysDown[i] = false;
@@ -21,7 +46,9 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 
 void Engine::gameLoop()
 {
+#ifndef __APPLE__
 	window.SetActive();
+#endif
 	while(running){
 		graphics.clearBuffers();
 		processEvents();
@@ -43,7 +70,8 @@ void Engine::gameLoop()
 			if(TTL < 0.0f)
 			{
 				(*i)->setVelocity(0.0f);
-				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL / 100.0f);
+				glm::vec3 explpos=glm::vec3((*i)->position[3]);
+				graphics.drawExplosion(explpos, -TTL / 100.0f);
 				if(TTL < -100.0f)
 				{
 					tProjectiles::iterator j = i; ++i; removeProjectile(j);
@@ -57,14 +85,23 @@ void Engine::gameLoop()
 
 		if(activeTank)
 			activeTank->tick(keysDown, *this);
+#ifdef __APPLE__
+		glfwSwapBuffers();
+#else
 		window.Display();
+#endif
 	}
+#ifdef __APPLE__
+	glfwTerminate();
+#else
 	window.Close();
+#endif
 }
 
 void Engine::processEvents()
 {
 	sf::Event event;
+#ifndef __APPLE__
 	while (window.PollEvent(event))
 	{
 		// Close window : exit
@@ -78,6 +115,7 @@ void Engine::processEvents()
 		if ((event.Type == sf::Event::KeyPressed || event.Type == sf::Event::KeyReleased))
 			handleKeyPress(event);
 	}
+#endif
 }
 
 void Engine::handleKeyPress(sf::Event& event)

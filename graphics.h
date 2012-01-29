@@ -5,7 +5,6 @@
 
 //#include <ft2build.h>
 //#include FT_FREETYPE_H
-#include <GL/glew.h>
 #include "entity.h"
 #include <list>
 #include <string>
@@ -143,6 +142,9 @@ class Graphics
 	void clearBuffers();
 	void drawPhong(const Entity&);
 	void drawExplosion(glm::vec3& position, float lifetime);
+#ifdef __APPLE__
+	void initGLFW();
+#endif
 
 };
 

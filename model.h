@@ -1,8 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <GL3/gl3w.h>
 #include <SFML/Graphics.hpp>
-#include <GL/glew.h>
 #include <string>
 #include <iosfwd>
 #include <stdint.h>

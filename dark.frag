@@ -1,6 +1,6 @@
 // Fragment Shader – file "dark.frag"
 
-#version 330
+#version 150
 
 uniform sampler2D textures[1];
 smooth in vec2 texcoord;

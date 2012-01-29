@@ -1,23 +1,53 @@
+#include <GL3/gl3w.h>
 #include "graphics.h"
 #include "sheikki_wrappers.h"
 #include "machineinfo.h"
-#include <GL/glew.h>
 #include <iostream>
 #include <fstream>
 #include <cmath>
 #include <sstream>
+#ifdef __APPLE__
+	#include <GL/glfw.h>
+#endif
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
 	Graphics::Graphics()
 {
 	perspective=glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
+#ifdef __APPLE__
+	initGLFW();
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	if( !glfwOpenWindow( 800, 600, 0,0,0,0, 0,0, GLFW_WINDOW ) )
+	{
+		std::cerr << "Failed to open glfw window" << std::endl;
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	glfwSetWindowTitle("Shake-engine");
+	glfwEnable( GLFW_STICKY_KEYS );
+	// Enable vertical sync (on cards that support it)
+	glfwSwapInterval( 1 );
+#else
+#endif
 	initGlew();
 	initGL();
 	defaultShader.init();
 	explosionShader.init();
 	phongShader.init();
 	//	initFonts();
+}
+
+void Graphics::initGLFW()
+{
+	if(!glfwInit())
+	{
+		std::cerr << "Failed to init glfw" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 }
 
 void Graphics::initFonts()
@@ -31,6 +61,12 @@ void Graphics::initFonts()
 
 void Graphics::initGlew()
 {
+	int ok=gl3wInit();
+	if(ok) {std::cerr << "Error initializing gl3w." << std::endl; exit(-1);}
+	ok=gl3wIsSupported(3,2);
+	if(!ok) {std::cerr << "OpenGL 3.2 core profile is not supported" << std::endl; exit(-1);}
+/*
+	glewExperimental=GL_TRUE;
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
@@ -53,6 +89,7 @@ void Graphics::initGlew()
 		std::cerr << "Using version 120 shaders!\n";
 	}
 
+*/
 	defaultShader.setShaderPaths("plain.vert", "plain.frag");
 	explosionShader.setShaderPaths("explosion.vert", "explosion.frag");
 	phongShader.setShaderPaths("phong.vert", "phong.frag");
@@ -113,8 +150,8 @@ void Shader::setShaderPaths(const char* vp, const char* fp)
 {
 	std::string vertex=vp;
 	std::string fragment=fp;
-	if(MachineInfo::glsl_version<3.3) vertex+="120";
-	if(MachineInfo::glsl_version<3.3) fragment+="120";
+	//if(MachineInfo::glsl_version<3.3) vertex+="120";
+	//if(MachineInfo::glsl_version<3.3) fragment+="120";
 	vertex_shader_path=vertex;
 	fragment_shader_path=fragment;
 }

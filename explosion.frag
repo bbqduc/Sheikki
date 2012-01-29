@@ -1,6 +1,6 @@
 // Fragment Shader  file "explosion.frag"
 
-#version 330
+#version 150
 
 uniform sampler2D textures[1];
 smooth in vec2 texcoord;
@@ -10,5 +10,5 @@ smooth in float dist;
 out vec4 vFragColor;
 
 void main(void) {
-	vFragColor = texture2D(textures[0], texcoord) * (vec4(1.0f) * timeleft);
+	vFragColor = texture(textures[0], texcoord) * (vec4(1.0f) * timeleft);
 }

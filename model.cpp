@@ -155,7 +155,7 @@ void Model::Init_Texture(const std::string& texturepath)
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// OpenGL texture parameter magic.
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
@@ -163,6 +163,7 @@ void Model::Init_Texture(const std::string& texturepath)
 
 	// Generate the texture. RGBA channels are required.
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tmp.GetWidth(), tmp.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texturedata);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 
