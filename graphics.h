@@ -1,8 +1,6 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include <SFML/Window.hpp>
-
 //#include <ft2build.h>
 //#include FT_FREETYPE_H
 #include "entity.h"
@@ -130,8 +128,10 @@ class Graphics
 	glm::mat4 perspective;
 
 	void initFonts();
-	void initGlew();
+	void initGl3w();
 	void initGL();
+	void initShaders();
+	void initGlfw();
 
 	public:
 	Graphics();
@@ -142,10 +142,6 @@ class Graphics
 	void clearBuffers();
 	void drawPhong(const Entity&);
 	void drawExplosion(glm::vec3& position, float lifetime);
-#ifdef __APPLE__
-	void initGLFW();
-#endif
-
 };
 
 #endif

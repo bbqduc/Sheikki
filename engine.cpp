@@ -1,37 +1,12 @@
 #include "engine.h"
 #include <iostream>
-#ifdef __APPLE__
-	#include <GL/glfw.h>
-#endif
+#include <GL/glfw.h>
 
 Engine::Engine(int width, int height, int depth)
-#ifdef __APPLE__
-	:
-#else
-	: window(sf::VideoMode(width, height, depth), "Shake-engine"),
-#endif
 	graphics(),
 	objects(),
 	running(true)
 {
-#ifdef __APPLE__
-/*
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
-	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	if( !glfwOpenWindow( width, height, 0,0,0,0, 0,0, GLFW_WINDOW ) )
-	{
-		std::cerr << "Failed to open glfw window" << std::endl;
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-	glfwSetWindowTitle("Shake-engine");
-	glfwEnable( GLFW_STICKY_KEYS );
-	// Enable vertical sync (on cards that support it)
-	glfwSwapInterval( 1 );
-*/
-#endif
 	for(int i = 0; i < KEYS; ++i)
 	{
 		keysDown[i] = false;
@@ -46,9 +21,6 @@ void Engine::removeProjectile(std::list<Projectile*>::iterator j)
 
 void Engine::gameLoop()
 {
-#ifndef __APPLE__
-	window.SetActive();
-#endif
 	while(running){
 		graphics.clearBuffers();
 		processEvents();
@@ -85,23 +57,15 @@ void Engine::gameLoop()
 
 		if(activeTank)
 			activeTank->tick(keysDown, *this);
-#ifdef __APPLE__
 		glfwSwapBuffers();
-#else
-		window.Display();
-#endif
 	}
-#ifdef __APPLE__
 	glfwTerminate();
-#else
-	window.Close();
-#endif
 }
 
 void Engine::processEvents()
 {
-	sf::Event event;
 #ifndef __APPLE__
+	sf::Event event;
 	while (window.PollEvent(event))
 	{
 		// Close window : exit

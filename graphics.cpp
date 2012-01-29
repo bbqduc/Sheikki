@@ -1,4 +1,5 @@
 #include <GL3/gl3w.h>
+#include <GL/glfw.h>
 #include "graphics.h"
 #include "sheikki_wrappers.h"
 #include "machineinfo.h"
@@ -6,17 +7,35 @@
 #include <fstream>
 #include <cmath>
 #include <sstream>
-#ifdef __APPLE__
-	#include <GL/glfw.h>
-#endif
 
 #define BUFFER_OFFSET(i) ((char*)NULL + i)
 
 	Graphics::Graphics()
 {
 	perspective=glm::perspective(45.0f, 4.0f/3.0f, 0.1f, 100.0f);
-#ifdef __APPLE__
-	initGLFW();
+	initGl3w();
+	initGlfw();
+	initGL();
+	initShaders();
+	//initFonts();
+}
+void Graphics::initShaders()
+{
+	defaultShader.setShaderPaths("plain.vert", "plain.frag");
+	explosionShader.setShaderPaths("explosion.vert", "explosion.frag");
+	phongShader.setShaderPaths("phong.vert", "phong.frag");
+	defaultShader.init();
+	explosionShader.init();
+	phongShader.init();
+}
+
+void Graphics::initGLFW()
+{
+	if(!glfwInit())
+	{
+		std::cerr << "Failed to init glfw" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
 	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -31,23 +50,6 @@
 	glfwEnable( GLFW_STICKY_KEYS );
 	// Enable vertical sync (on cards that support it)
 	glfwSwapInterval( 1 );
-#else
-#endif
-	initGlew();
-	initGL();
-	defaultShader.init();
-	explosionShader.init();
-	phongShader.init();
-	//	initFonts();
-}
-
-void Graphics::initGLFW()
-{
-	if(!glfwInit())
-	{
-		std::cerr << "Failed to init glfw" << std::endl;
-		exit(EXIT_FAILURE);
-	}
 }
 
 void Graphics::initFonts()
@@ -61,38 +63,10 @@ void Graphics::initFonts()
 
 void Graphics::initGlew()
 {
-	int ok=gl3wInit();
-	if(ok) {std::cerr << "Error initializing gl3w." << std::endl; exit(-1);}
-	ok=gl3wIsSupported(3,2);
-	if(!ok) {std::cerr << "OpenGL 3.2 core profile is not supported" << std::endl; exit(-1);}
-/*
-	glewExperimental=GL_TRUE;
-	GLenum err = glewInit();
-	if(err != GLEW_OK)
-	{
-		std::cerr << "GLEW INIT FAILED!\n";
-		exit(-1);
-	}
-	else
-		std::cerr << "Glew version : " << glewGetString(GLEW_VERSION)
-			<< "\nOpengl version : " << glGetString(GL_VERSION) 
-			<< "\nShading language version : " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
-
-	std::stringstream temp; temp << glGetString(GL_SHADING_LANGUAGE_VERSION);
-	temp >> MachineInfo::glsl_version;
-	if(MachineInfo::glsl_version >= 3.3)
-	{
-		std::cerr << "Using version 330 shaders!\n";
-	}
-	else
-	{
-		std::cerr << "Using version 120 shaders!\n";
-	}
-
-*/
-	defaultShader.setShaderPaths("plain.vert", "plain.frag");
-	explosionShader.setShaderPaths("explosion.vert", "explosion.frag");
-	phongShader.setShaderPaths("phong.vert", "phong.frag");
+	int err=gl3wInit();
+	if(err) {std::cerr << "Error initializing gl3w." << std::endl; exit(-1);}
+	int coreIsSupported=gl3wIsSupported(3,2);
+	if(!coreIsSupported) {std::cerr << "OpenGL 3.2 core profile is not supported" << std::endl; exit(-1);}
 }
 
 void Graphics::initGL()
@@ -101,8 +75,7 @@ void Graphics::initGL()
 	glEnable(GL_CULL_FACE);
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
-    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)	
-
+    	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); // Polygon rasterization mode (polygon filled)	
 }
 
 void checkGLErrors(std::string functionName){

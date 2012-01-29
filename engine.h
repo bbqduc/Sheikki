@@ -5,7 +5,6 @@
 #include "entity.h"
 #include "tank.h"
 #include "projectile.h"
-#include <SFML/Window.hpp>
 #include <list>
 
 class Engine
@@ -16,9 +15,6 @@ class Engine
 	private:
 		static const unsigned int KEYS=9;
 		bool keysDown[KEYS];
-#ifndef __APPLE
-		sf::Window window;
-#endif
 		Graphics graphics;
 		std::vector<Shader*> unused_shaders;
 		std::vector<Shader*> shader_storage; // Just for demo purposes.
