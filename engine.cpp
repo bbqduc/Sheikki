@@ -71,22 +71,6 @@ void Engine::gameLoop()
 void Engine::processEvents()
 {
 	running=(bool)glfwGetWindowParam(GLFW_OPENED);
-#ifndef __APPLE__
-	sf::Event event;
-	while (window.PollEvent(event))
-	{
-		// Close window : exit
-		if (event.Type == sf::Event::Closed)
-			running=false;
-		// Resize event : adjust viewport
-		if (event.Type == sf::Event::Resized)
-			graphics.reshape(event.Size.Width, event.Size.Height);
-
-		// Escape key : exit
-		if ((event.Type == sf::Event::KeyPressed || event.Type == sf::Event::KeyReleased))
-			handleKeyPress(event);
-	}
-#endif
 }
 
 void GLFWCALL handleKeyPress(int key, int action)
