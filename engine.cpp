@@ -2,11 +2,16 @@
 #include <iostream>
 #include <GL/glfw.h>
 
+bool Engine::running;
+bool Engine::keysDown[Engine::KEYS];
+
+void GLFWCALL handleKeyPress(int,int);
 Engine::Engine(int width, int height, int depth)
 	:graphics(),
-	objects(),
-	running(true)
+	objects()
 {
+	running=true;
+	glfwSetKeyCallback(handleKeyPress);
 	for(int i = 0; i < KEYS; ++i)
 	{
 		keysDown[i] = false;
@@ -84,52 +89,52 @@ void Engine::processEvents()
 #endif
 }
 
-void Engine::handleKeyPress(sf::Event& event)
+void GLFWCALL handleKeyPress(int key, int action)
 {
-	if(event.Type == sf::Event::KeyPressed)
+	if(action==GLFW_PRESS)
 	{
-		if(event.Key.Code == sf::Keyboard::Escape)
-			running=false;
-		if(event.Key.Code == sf::Keyboard::Up)
-			keysDown[UP] = true;
-		if(event.Key.Code == sf::Keyboard::Down)
-			keysDown[DOWN] = true;
-		if(event.Key.Code == sf::Keyboard::Left)
-			keysDown[LEFT] = true;
-		if(event.Key.Code == sf::Keyboard::Right)
-			keysDown[RIGHT] = true;
-		if(event.Key.Code == sf::Keyboard::A)
-			keysDown[A] = true;
-		if(event.Key.Code == sf::Keyboard::Z)
-			keysDown[Z] = true;
-		if(event.Key.Code == sf::Keyboard::Q)
-			keysDown[Q] = true;
-		if(event.Key.Code == sf::Keyboard::E)
-			keysDown[E] = true;
-		if(event.Key.Code == sf::Keyboard::Space)
-			keysDown[SPACE] = true;
+		if(key == GLFW_KEY_ESC)
+			Engine::stop();
+		if(key == GLFW_KEY_UP)
+			Engine::setKey(Engine::UP);
+		if(key == GLFW_KEY_DOWN)
+			Engine::setKey(Engine::DOWN);
+		if(key == GLFW_KEY_LEFT)
+			Engine::setKey(Engine::LEFT);
+		if(key == GLFW_KEY_RIGHT)
+			Engine::setKey(Engine::RIGHT);
+		if(key == 'A')
+			Engine::setKey(Engine::A);
+		if(key == 'Z')
+			Engine::setKey(Engine::Z);
+		if(key == 'Q')
+			Engine::setKey(Engine::Q);
+		if(key == 'E')
+			Engine::setKey(Engine::E);
+		if(key == GLFW_KEY_SPACE)
+			Engine::setKey(Engine::SPACE);
 	}	
 
-	if(event.Type == sf::Event::KeyReleased)
+	if(action==GLFW_RELEASE)
 	{
-		if(event.Key.Code == sf::Keyboard::Up)
-			keysDown[UP] = false;
-		if(event.Key.Code == sf::Keyboard::Down)
-			keysDown[DOWN] = false;
-		if(event.Key.Code == sf::Keyboard::Left)
-			keysDown[LEFT] = false;
-		if(event.Key.Code == sf::Keyboard::Right)
-			keysDown[RIGHT] = false;
-		if(event.Key.Code == sf::Keyboard::A)
-			keysDown[A] = false;
-		if(event.Key.Code == sf::Keyboard::Z)
-			keysDown[Z] = false;
-		if(event.Key.Code == sf::Keyboard::Q)
-			keysDown[Q] = false;
-		if(event.Key.Code == sf::Keyboard::E)
-			keysDown[E] = false;
-		if(event.Key.Code == sf::Keyboard::Space)
-			keysDown[SPACE] = false;
+		if(key == GLFW_KEY_UP)
+			Engine::unsetKey(Engine::UP);
+		if(key == GLFW_KEY_DOWN)
+			Engine::unsetKey(Engine::DOWN);
+		if(key == GLFW_KEY_LEFT)
+			Engine::unsetKey(Engine::LEFT);
+		if(key == GLFW_KEY_RIGHT)
+			Engine::unsetKey(Engine::RIGHT);
+		if(key == 'A')
+			Engine::unsetKey(Engine::A);
+		if(key == 'Z')
+			Engine::unsetKey(Engine::Z);
+		if(key == 'Q')
+			Engine::unsetKey(Engine::Q);
+		if(key == 'E')
+			Engine::unsetKey(Engine::E);
+		if(key == GLFW_KEY_SPACE)
+			Engine::unsetKey(Engine::SPACE);
 	}
 }
 

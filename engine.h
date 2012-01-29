@@ -14,7 +14,7 @@ class Engine
 	typedef std::list<Projectile*> tProjectiles;
 	private:
 		static const unsigned int KEYS=9;
-		bool keysDown[KEYS];
+		static bool keysDown[KEYS];
 		Graphics graphics;
 		std::vector<Shader*> unused_shaders;
 		std::vector<Shader*> shader_storage; // Just for demo purposes.
@@ -26,13 +26,14 @@ class Engine
 		Tank* activeTank; // This is the object being controlled by user input
 
 		void processEvents();
-		void handleKeyPress(sf::Event& e);
 		void applyInput(Entity* entity, sf::Uint32 delta);
 
-		bool running;
+		static bool running;
 
 	public:
-		static enum {UP, DOWN, LEFT, RIGHT, A, Z, Q, E, SPACE} keys; 
+		enum key {UP, DOWN, LEFT, RIGHT, A, Z, Q, E, SPACE};
+		static void setKey(key k) {Engine::keysDown[k]=true;}
+		static void unsetKey(key k) {Engine::keysDown[k]=false;}
 
 		Engine(int width = 800, int height = 600, int depth = 32);
 		void addModel(std::string id, Model& model);
@@ -48,5 +49,6 @@ class Engine
 		void setActive(Tank* tank);
 
 		void gameLoop();
+		static void stop() {running=false;}
 };
 #endif
