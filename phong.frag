@@ -22,6 +22,6 @@ void main(void) {
 		float fSpec = pow(spec, 32.0);
 		vFragColor.rgb += vec3(fSpec, fSpec, fSpec);
 	}
-	vFragColor = texture(textures[0], texcoord);
+	vFragColor *= texture(textures[0], texcoord);
 
 }
