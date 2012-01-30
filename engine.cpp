@@ -1,6 +1,7 @@
 #include "engine.h"
 #include <iostream>
 #include <GL/glfw.h>
+#include "msSleep.h"
 
 bool Engine::running;
 bool Engine::keysDown[Engine::KEYS];
@@ -63,6 +64,7 @@ void Engine::gameLoop()
 
 		if(activeTank)
 			activeTank->tick(keysDown, *this);
+		msSleep(1);
 		glfwSwapBuffers();
 	}
 	glfwTerminate();
