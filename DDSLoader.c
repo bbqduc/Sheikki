@@ -29,7 +29,7 @@ int parseHeader(FILE* f, unsigned char* header)
 		fclose(f);
 		return -1;
 	}
-	fread(&header, 124, 1, f);
+	fread(header, 124, 1, f);
 	return 0;
 }
 int getFormat(unsigned char* buf, struct DDSData* data)
