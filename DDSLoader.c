@@ -50,6 +50,7 @@ GLuint createTexture(unsigned char* buf, struct DDSData* data)
 	GLuint tex;
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
+
 	unsigned int blocksize=(data->format==GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)?8:16;
 	unsigned int offset=0;
 
@@ -108,9 +109,4 @@ GLuint loadDDSTexture(const char* path)
 	GLuint tex=createTexture(buf, &data);
 	free(buf);
 	return tex;
-}
-
-int main(int argc, char** argv)
-{
-	printf("%d\n", loadDDSTexture(argv[1]));
 }

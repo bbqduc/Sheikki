@@ -10,10 +10,10 @@ int main()
 
 	Engine engine;
 	{
-		Model tank = Model_Loader_3ds::read_model("tank.3ds", "camouflage.jpg"),
-			plane = Model_Loader_3ds::read_model("plane.3ds", "ground.jpg"),
-			bullet = Model_Loader_3ds::read_model("bullet.3ds", "TEXTURE_TEST.png"),
-			sphere = Model_Loader_3ds::read_model("sphere.3ds", "explosion.jpg");
+		Model tank = Model_Loader_3ds::read_model("tank.3ds", "camouflage.dds"),
+			plane = Model_Loader_3ds::read_model("plane.3ds", "ground.dds"),
+			bullet = Model_Loader_3ds::read_model("bullet.3ds", "TEXTURE_TEST.dds"),
+			sphere = Model_Loader_3ds::read_model("sphere.3ds", "explosion.dds");
 		engine.addModel("tank", tank);
 		engine.addModel("plane", plane);
 		engine.addModel("bullet", bullet);

@@ -2,6 +2,7 @@
 #include "sheikki_wrappers.h"
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
+#include "DDSLoader.c"
 
 // Private constructor used by Model_3ds_loader
 Model::Model():
@@ -145,6 +146,7 @@ void Model::calculate_normals()
 
 void Model::Init_Texture(const std::string& texturepath)
 {
+	/*
 	// Load image, initialize texture and destroy the image.
 	sf::Image tmp;
 	tmp.LoadFromFile(texturepath);
@@ -163,6 +165,15 @@ void Model::Init_Texture(const std::string& texturepath)
 
 	// Generate the texture. RGBA channels are required.
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tmp.GetWidth(), tmp.GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texturedata);
+	*/
+	texture=loadDDSTexture(texturepath.c_str());
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
+	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 
