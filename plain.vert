@@ -1,6 +1,6 @@
 #version 330
 
-in vec3 in_Position;
+layout(location=0) in vec3 in_Position;
 uniform mat4 MVP;
 
 void main()
