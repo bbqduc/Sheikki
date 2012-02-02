@@ -43,7 +43,8 @@ void Engine::gameLoop()
 			if(TTL < 0.0f)
 			{
 				(*i)->setVelocity(0.0f);
-				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL / 100.0f);
+				glm::vec3 explpos=glm::vec3((*i)->position[3]);
+				graphics.drawExplosion(explpos, -TTL / 100.0f);
 				if(TTL < -100.0f)
 				{
 					tProjectiles::iterator j = i; ++i; removeProjectile(j);
