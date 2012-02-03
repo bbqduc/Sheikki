@@ -1,4 +1,4 @@
-CC = g++ -Wall -Wextra -Wno-write-strings -pedantic -Wall -Wextra -O3 -I/usr/local/include -I.
+CC = g++ -Wall -Wextra -Werror -Wno-write-strings -pedantic -Wall -Wextra -O3 -I/usr/local/include -I.
 SFML = -lsfml-window -lsfml-system -lsfml-graphics
 CPPS = main.cpp entity.cpp model.cpp graphics.cpp engine.cpp 3ds_loader.cpp projectile.cpp tank.cpp
 OBJS = main.o entity.o model.o graphics.o engine.o 3ds_loader.o

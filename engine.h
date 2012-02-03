@@ -40,11 +40,10 @@ class Engine
 		void addModel(std::string id, Model& model);
 		const Model& getModel(std::string id);
 
-		void addObject(Entity* entity, Shader* shader=NULL);
-		void addTank(Tank* tank, Shader* shader=NULL);
-		void addProjectile(Projectile* projectile, Shader* shader=NULL);
+		void addObject(Entity* entity);
+		void addTank(Tank* tank);
+		void addProjectile(Projectile* projectile);
 		void removeProjectile(std::list<Projectile*>::iterator j);
-
 
 		void addShader(Shader* shader) {unused_shaders.push_back(shader);}
 		void setActive(Tank* tank);

@@ -9,9 +9,9 @@ Model::Model():
 num_vertices(0),
 	num_polygons(0),
 	vertices(NULL),
+	normals(NULL),
 	texcoords(NULL),
-	polygons(NULL),
-	normals(NULL)
+	polygons(NULL)
 {}
 
 Model::Model(const Model& model):
@@ -19,9 +19,9 @@ name(model.name),
 	num_vertices(model.num_vertices),
 	num_polygons(model.num_polygons),
 	vertices(new glm::vec3[num_vertices]),
-	polygons(new glm::uvec3[num_polygons]),
-	texcoords(NULL),
 	normals(new glm::vec3[num_vertices]),
+	texcoords(NULL),
+	polygons(new glm::uvec3[num_polygons]),
 	drawMode(model.drawMode),
 	texture(model.texture),
 	texturecoords(model.texturecoords),
@@ -34,9 +34,9 @@ name(model.name),
 {
 	if(model.texcoords)
 		texcoords = new glm::vec2[num_vertices];
-	for(size_t i = 0; i < num_polygons; ++i)
+	for(int i = 0; i < num_polygons; ++i)
 		polygons[i] = model.polygons[i];
-	for(size_t i = 0; i < num_vertices; ++i)
+	for(int i = 0; i < num_vertices; ++i)
 	{
 		vertices[i] = model.vertices[i];
 		normals[i] = model.normals[i];
@@ -46,7 +46,7 @@ name(model.name),
 }
 
 Model::Model(int num_vertices_, int num_polygons_, glm::vec3* vertices_, glm::uvec3* polygons_, GLint drawMode_) :
-num_vertices(num_vertices_),
+	num_vertices(num_vertices_),
 	num_polygons(num_polygons_),
 	vertices(new glm::vec3[num_vertices_]),
 	texcoords(NULL),
@@ -107,9 +107,9 @@ Model& Model::operator=(const Model& rhs)
 		VAO_id=rhs.VAO_id;
 		if(rhs.texcoords)
 			texcoords = new glm::vec2[num_vertices];
-		for(size_t i = 0; i < num_polygons; ++i)
+		for(int i = 0; i < num_polygons; ++i)
 			polygons[i] = rhs.polygons[i];
-		for(size_t i = 0; i < num_vertices; ++i)
+		for(int i = 0; i < num_vertices; ++i)
 		{
 			vertices[i] = rhs.vertices[i];
 			normals[i] = rhs.normals[i];

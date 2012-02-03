@@ -98,14 +98,11 @@ GLuint loadDDSTexture(const char* path)
 	fread(buf,1,bufsize,f);
 	fclose(f);
 
-	unsigned int format;
 	if(getFormat(buf, &data)!=0)
 	{
 		fprintf(stderr, "Failed to get format from FourCC.\n");
 		return 0;
 	}
-	unsigned int components=(data.fourcc==FOURCC_DXT1)?3:4;
-
 	GLuint tex=createTexture(buf, &data);
 	free(buf);
 	return tex;

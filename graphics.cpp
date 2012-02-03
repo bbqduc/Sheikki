@@ -243,7 +243,7 @@ void Graphics::drawPhong(const Entity& e)
 	checkGLErrors("drawPhong");
 }
 
-void Graphics::drawExplosion(glm::vec3& position, float lifetime)
+void Graphics::drawExplosion(const glm::vec3& position, float lifetime)
 {
 	glm::mat4 VP = perspective * glm::translate(glm::mat4(1.0f), glm::vec3(0,0,-10));
 	glm::mat4 MVP = VP * glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f),glm::vec3(lifetime));

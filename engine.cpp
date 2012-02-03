@@ -7,7 +7,7 @@ Engine::Engine(int width, int height, int depth)
 	objects(),
 	running(true)
 {
-	for(int i = 0; i < KEYS; ++i)
+	for(unsigned int i = 0; i < KEYS; ++i)
 	{
 		keysDown[i] = false;
 	}
@@ -43,8 +43,7 @@ void Engine::gameLoop()
 			if(TTL < 0.0f)
 			{
 				(*i)->setVelocity(0.0f);
-				glm::vec3 explpos=glm::vec3((*i)->position[3]);
-				graphics.drawExplosion(explpos, -TTL / 100.0f);
+				graphics.drawExplosion(glm::vec3((*i)->position[3]), -TTL / 100.0f);
 				if(TTL < -100.0f)
 				{
 					tProjectiles::iterator j = i; ++i; removeProjectile(j);
@@ -130,17 +129,17 @@ void Engine::handleKeyPress(sf::Event& event)
 	}
 }
 
-void Engine::addObject(Entity* entity, Shader* shader)
+void Engine::addObject(Entity* entity)
 {
 	objects.push_back(entity);
 }
 
-void Engine::addTank(Tank* tank, Shader* shader)
+void Engine::addTank(Tank* tank)
 {
 	tanks.push_back(tank);
 }
 
-void Engine::addProjectile(Projectile* projectile, Shader* shader)
+void Engine::addProjectile(Projectile* projectile)
 {
 	projectiles.push_back(projectile);
 }

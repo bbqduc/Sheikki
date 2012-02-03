@@ -23,11 +23,8 @@ int main()
 	Tank entity = Tank(engine.getModel("tank"));
 	Entity plane_e = Entity(engine.getModel("plane"));
 
-	PhongShader phong("phong.vert","phong.frag");
-	engine.addShader(&phong);
-
-	engine.addTank(&entity, &phong);
-	engine.addObject(&plane_e, &phong);
+	engine.addTank(&entity);
+	engine.addObject(&plane_e);
 
 	plane_e.rotatePitch(90.0f);
 	plane_e.move(0,-3,0);

@@ -142,7 +142,7 @@ class Graphics
 	void reshape(int width, int height);
 	void clearBuffers();
 	void drawPhong(const Entity&);
-	void drawExplosion(glm::vec3& position, float lifetime);
+	void drawExplosion(const glm::vec3& position, float lifetime);
 
 };
 
